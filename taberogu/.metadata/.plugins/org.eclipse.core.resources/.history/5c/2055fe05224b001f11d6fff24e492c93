@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Bootstrap -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+	<!-- Google Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
+
+	<link th:href="@{/css/style.css}" rel="stylesheet">
+
+	<title>ユーザートップページ</title>
+</head>
+
+<body>
+	<div class="samuraitabelog-wrapper">
+		<!-- ヘッダー -->
+		<nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm samuraitabelog-navbar">
+			<div class="container samuraitabelog-container">
+				<a class="navbar-brand" th:href="@{/top}">
+					<img class="samuraitabelog-logo me-1" alt="食べログ">
+				</a>
+			</div>
+		</nav>
+		<main>
+			<div class="container samuraitabelog-container pb-5">
+				<div class="row">
+					<div class="col-md-3">
+						<nav class="my-3" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0">
+								<li class="breadcrumb-item active" aria-current="page"><a th:href="@{/}">トップページ</a></li>
+							</ol>
+						</nav>
+
+						<!-- 検索フォーム -->
+						<form method="get" th:action="@{/restaurant}" class="w-100 mb-3">
+							<div class="input-group">
+								<input type="text" class="form-control" name="keyword" th:value="${keyword}"
+									placeholder="店舗名・目的地">
+								<button type="submit" class="btn btn-primary">検索</button>
+							</div>
+						</form>
+
+						<!-- カテゴリ -->
+						<div class="card mb-3">
+							<h2 class="card-header text-center mb-3">カテゴリ</h2>
+							<div class="card-body">
+								<a th:href="@{/restaurant?category=カフェ}">カフェ</a>
+								<a th:href="@{/restaurant?category=焼肉}">焼肉</a>
+								<a th:href="@{/restaurant?category=寿司}">寿司</a>
+								<a th:href="@{/restaurant?category=中華}">中華</a>
+								<a th:href="@{/restaurant?category=丼物}">丼物</a>
+								<a th:href="@{/restaurant?category=和食}">和食</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row row-cols-lg-3 row-cols-1 g-3 mb-5">
+					<!-- 新着店舗 -->
+					<h2 class="text-center mb-3">新着店舗</h2>
+					<div class="col" th:each="newRestaurant : ${newRestaurant}">
+						<a th:href="@{/restaurant/__${newRestaurant.getId()}__}"
+							class="link-dark samuraitabelog-card-link">
+							<div class="card h-100">
+								<img th:if="${newRestaurant.getImage()}"
+									th:src="@{/storage/__${newRestaurant.getImage()}__}"
+									class="card-img-top samuraitravel-vertical-card-image" alt="店舗画像">
+								<img th:unless="${newRestaurant.getImage()}" th:src="@{/images/noImage.png}"
+									class="card-img-top samuraitravel-vertical-card-image" alt="NO IMAGE">
+								<div class="card-body">
+									<h3 class="card-title" th:text="${newRestaurant.getName()}"></h3>
+									<p class="card-text mb-1">
+										<small class="text-muted" th:text="${newRestaurant.getAddress()}"></small>
+									</p>
+									<p class="card-text">
+										<span
+											th:text="${#numbers.formatInteger(newRestaurant.getPrice(), 1, 'COMMA') + '円'}"></span>
+									</p>
+								</div>
+							</div>
+						</a>
+					</div>
+
+					<!-- お気に入り店舗 -->
+					<h2 class="text-center mb-3">お気に入り店舗</h2>
+
+					<!-- 価格の安い店舗 -->
+					<h2 class="text-center mb-3">価格の安い店舗</h2>
+				</div>
+
+				<!-- エリア -->
+				<div class="justify-content-center col-md-3">
+					<h2 class="text-center mb-3">エリア</h2>
+
+					<table class="table">
+						<tbody>
+							<tr>
+								<th>北海道</th>
+								<td>
+									<a th:href="@{/houses?area=北海道}">北海道</a>
+								</td>
+							</tr>
+							<tr>
+								<th>東北</th>
+								<td>
+									<a th:href="@{/houses?area=青森県}" class="me-2">青森県</a>
+									<a th:href="@{/houses?area=岩手県}" class="me-2">岩手県</a>
+									<a th:href="@{/houses?area=宮城県}" class="me-2">宮城県</a>
+									<a th:href="@{/houses?area=秋田県}" class="me-2">秋田県</a>
+									<a th:href="@{/houses?area=山形県}" class="me-2">山形県</a>
+									<a th:href="@{/houses?area=福島県}">福島県</a>
+								</td>
+							</tr>
+							<tr>
+								<th>北関東</th>
+								<td>
+									<a th:href="@{/houses?area=茨城県}" class="me-2">茨城県</a>
+									<a th:href="@{/houses?area=栃木県}" class="me-2">栃木県</a>
+									<a th:href="@{/houses?area=群馬県}">群馬県</a>
+								</td>
+							</tr>
+							<tr>
+								<th>首都圏</th>
+								<td>
+									<a th:href="@{/houses?area=埼玉県}" class="me-2">埼玉県</a>
+									<a th:href="@{/houses?area=千葉県}" class="me-2">千葉県</a>
+									<a th:href="@{/houses?area=東京都}" class="me-2">東京都</a>
+									<a th:href="@{/houses?area=神奈川県}">神奈川県</a>
+								</td>
+							</tr>
+							<tr>
+								<th>甲信越</th>
+								<td>
+									<a th:href="@{/houses?area=新潟県}" class="me-2">新潟県</a>
+									<a th:href="@{/houses?area=山梨県}" class="me-2">山梨県</a>
+									<a th:href="@{/houses?area=長野県}">長野県</a>
+								</td>
+							</tr>
+							<tr>
+								<th>北陸</th>
+								<td>
+									<a th:href="@{/houses?area=富山県}" class="me-2">富山県</a>
+									<a th:href="@{/houses?area=石川県}" class="me-2">石川県</a>
+									<a th:href="@{/houses?area=福井県}">福井県</a>
+								</td>
+							</tr>
+							<tr>
+								<th>東海</th>
+								<td>
+									<a th:href="@{/houses?area=岐阜県}" class="me-2">岐阜県</a>
+									<a th:href="@{/houses?area=静岡県}" class="me-2">静岡県</a>
+									<a th:href="@{/houses?area=愛知県}" class="me-2">愛知県</a>
+									<a th:href="@{/houses?area=三重県}">三重県</a>
+								</td>
+							</tr>
+							<tr>
+								<th>近畿</th>
+								<td>
+									<a th:href="@{/houses?area=滋賀県}" class="me-2">滋賀県</a>
+									<a th:href="@{/houses?area=京都府}" class="me-2">京都府</a>
+									<a th:href="@{/houses?area=大阪府}" class="me-2">大阪府</a>
+									<a th:href="@{/houses?area=兵庫県}" class="me-2">兵庫県</a>
+									<a th:href="@{/houses?area=奈良県}" class="me-2">奈良県</a>
+									<a th:href="@{/houses?area=和歌山県}">和歌山県</a>
+								</td>
+							</tr>
+							<tr>
+								<th>山陽・山陰</th>
+								<td>
+									<a th:href="@{/houses?area=鳥取県}" class="me-2">鳥取県</a>
+									<a th:href="@{/houses?area=島根県}" class="me-2">島根県</a>
+									<a th:href="@{/houses?area=岡山県}" class="me-2">岡山県</a>
+									<a th:href="@{/houses?area=広島県}" class="me-2">広島県</a>
+									<a th:href="@{/houses?area=山口県}">山口県</a>
+								</td>
+							</tr>
+							<tr>
+								<th>四国</th>
+								<td>
+									<a th:href="@{/houses?area=徳島県}" class="me-2">徳島県</a>
+									<a th:href="@{/houses?area=香川県}" class="me-2">香川県</a>
+									<a th:href="@{/houses?area=愛媛県}" class="me-2">愛媛県</a>
+									<a th:href="@{/houses?area=高知県}">高知県</a>
+								</td>
+							</tr>
+							<tr>
+								<th>九州</th>
+								<td>
+									<a th:href="@{/houses?area=福岡県}" class="me-2">福岡県</a>
+									<a th:href="@{/houses?area=佐賀県}" class="me-2">佐賀県</a>
+									<a th:href="@{/houses?area=長崎県}" class="me-2">長崎県</a>
+									<a th:href="@{/houses?area=熊本県}" class="me-2">熊本県</a>
+									<a th:href="@{/houses?area=大分県}" class="me-2">大分県</a>
+									<a th:href="@{/houses?area=宮崎県}" class="me-2">宮崎県</a>
+									<a th:href="@{/houses?area=鹿児島県}">鹿児島県</a>
+								</td>
+							</tr>
+							<tr>
+								<th>沖縄</th>
+								<td>
+									<a th:href="@{/houses?area=沖縄県}">沖縄県</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</main>
+	</div>
+	<!-- フッター -->
+	<footer>
+		<div class="d-flex justify-content-center align-items-center h-100">
+			<p class="text-center text-muted small mb-0">&copy; SAMURAI TabeLog All rights reserved.</p>
+			<p class="text-center text-muted small mb-0">会社情報</p>
+		</div>
+	</footer>
+	</div>
+
+	<!-- Bootstrap -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+		crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -1,0 +1,13 @@
+package com.example.taberogu.entity;
+@Entity
+@Table(name = "resutaurant")
+@Data
+public class resutaurant {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private Integer id;
+	
+	
+}
