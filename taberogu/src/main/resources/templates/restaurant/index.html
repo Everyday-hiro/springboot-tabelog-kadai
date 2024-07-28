@@ -154,6 +154,17 @@
 							</p>
 							<p th:unless="${restaurantPage.getTotalPages() > 1}" class="fs-5 mb-3"
 								th:text="${'検索結果：' + restaurantPage.getTotalElements() + '件'}"></p>
+
+							<form method="get" th:action="@{/restaurant}" class="mb-3 samuraitravel-sort-box">
+								<input th:if="${keyword}" type="hidden" name="keyword" th:value="${keyword}">
+								<input th:if="${category}" type="hidden" name="area" th:value="${category}">
+								<input th:if="${area}" type="hidden" name="price" th:value="${area}">
+								<select class="form-select form-select-sm" name="order" onChange="this.form.submit();">
+									<option value="createdAtDesc"
+										th:selected="${order == 'createdAtDesc' || order == null}">新着順</option>
+									<option value="priceAsc" th:selected="${order == 'priceAsc'}">価格の安い順</option>
+								</select>
+							</form>
 						</div>
 
 						<div class="mb-3" th:each="restaurant : ${restaurantPage}">
@@ -203,7 +214,7 @@
 									<li class="page-item">
 										<span th:if="${restaurantPage.isFirst()}" class="page-link disabled">前</span>
 										<a th:unless="${restaurantPage.isFirst()}"
-											th:href="@{/top(page = ${restaurantPage.getNumber() - 1}, keyword = ${keyword}, area = ${area}, category = ${category})}"
+											th:href="@{/restaurant(page = ${restaurantPage.getNumber() - 1}, keyword = ${keyword}, area = ${area}, category = ${category}, order = ${order})}"
 											class="page-link samuraitabelog-page-link">前</a>
 									</li>
 									<li th:each="i : ${#numbers.sequence(0, restaurantPage.getTotalPages() - 1)}"
@@ -211,13 +222,13 @@
 										<span th:if="${i ==restaurantPage.getNumber()}"
 											class="page-link active samuraitabelog-active" th:text="${i + 1}"></span>
 										<a th:unless="${i == restaurantPage.getNumber()}"
-											th:href="@{/top(page = ${i}, keyword = ${keyword}, area = ${area}, category = ${category})}"
+											th:href="@{/restaurant(page = ${i}, keyword = ${keyword}, area = ${area}, category = ${category}, order = ${order})}"
 											class="page-link samuraitabelog-page-link" th:text="${i + 1}"></a>
 									</li>
 									<li class="page-item">
 										<span th:if="${restaurantPage.isLast()}" class="page-link disabled">次</span>
 										<a th:unless="${restaurantPage.isLast()}"
-											th:href="@{/top(page = ${restaurantPage.getNumber() + 1}, keyword = ${keyword}, area = ${area}, category = ${category})}"
+											th:href="@{/restaurant(page = ${restaurantPage.getNumber() + 1}, keyword = ${keyword}, area = ${area}, category = ${category}, order = ${order})}"
 											class="page-link samuraitabelog-page-link">次</a>
 									</li>
 								</ul>

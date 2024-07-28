@@ -8,10 +8,25 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.taberogu.entity.Restaurant;
 
-public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>{
+public interface RestaurantRepository extends JpaRepository<Restaurant, Integer> {
 
-	 public Page<Restaurant> findByNameLikeOrAddressLike(String nameKeyword, String addressKeyword, Pageable pageable);    
-     public Page<Restaurant> findByAddressLike(String area, Pageable pageable);
-     public Page<Restaurant> findByCategoryLike(String category, Pageable pageable);
-	public List<Restaurant> findTop3ByOrderByCreatedAtDesc();    
+	public List<Restaurant> findTop3ByOrderByCreatedAtDesc();
+
+	public Page<Restaurant> findByNameLikeOrAddressLikeOrderByPriceAsc(String nameKeyword, String addressKeyword,
+			Pageable pageable);
+
+	public Page<Restaurant> findByNameLikeOrAddressLikeOrderByCreatedAtDesc(String nameKeyword, String addressKeyword,
+			Pageable pageable);
+
+	public Page<Restaurant> findByAddressLikeOrderByPriceAsc(String area, Pageable pageable);
+
+	public Page<Restaurant> findByAddressLikeOrderByCreatedAtDesc(String area, Pageable pageable);
+
+	public Page<Restaurant> findByCategoryLikeOrderByPriceAsc(String category, Pageable pageable);
+
+	public Page<Restaurant> findByCategoryLikeOrderByCreatedAtDesc(String category, Pageable pageable);
+
+	public Page<Restaurant> findAllByOrderByCreatedAtDesc(Pageable pageable);
+
+	public Page<Restaurant> findAllByOrderByPriceAsc(Pageable pageable);
 }
