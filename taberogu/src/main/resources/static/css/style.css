@@ -5,3 +5,17 @@ html {
 .samuraitabelog-logo {
 	height: 30px;
 }
+
+.review-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.review-actions a {
+	margin-left: 10px; 
+}
+
+.review-body{
+	padding-top: 10px;
+}

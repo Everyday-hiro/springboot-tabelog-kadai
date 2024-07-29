@@ -122,9 +122,47 @@
 											</div>
 										</div>
 									</div>
+
+									<!-- レビュー -->
+									<h3 class="text-left mb-3">レビュー</h3>
+									<div>
+										<a class="btn text-white shadow-sm samuraitabelog-btn"
+											th:href="@{restaurant/__${restaurant.getId()}__/review/register}">レビューを投稿する</a>
+										<div th:each="review : ${reviewPage}" class="position-relative my-positioin">
+											<div
+												class="review-header d-flex justify-content-between align-items-center mb-3">
+												<h3 class="review-title" th:text="${review.getName()}"></h3>
+												<div class="review-actions">
+													<a class="text-right"
+														th:href="@{/restaurant/__${restaurant.getId()}__/review/edit}">編集
+													</a>
+													<a
+														th:href="@{/restaurant/__${restaurant.getId()}__/review/delete}">削除</a>
+												</div>
+											</div>
+											<div class="review-body">
+												<p class="mb-2">
+													<small class="text-muted"
+														th:text="${#dates.format(review.getCreatedAt, 'yyyy年MM月dd日')}"></small>
+												</p>
+
+												<p class="text">
+													<span th:utext="${'&#9733;'.repeat(review.getStar())}"
+														class="review-star"></span>
+													<span th:utext="${'&#9734;'.repeat(5 - review.getStar())}"
+														class="review-star"></span>
+												</p>
+												<p class="text border-bottom">
+													<h8 class="card-text mb-3" th:text="${review.getDescription()}">
+													</h8>
+												</p>
+											</div>
+										</div>
+									</div>
+									<div class="text-center">
+										<a th:href="@{/restaurant/__${restaurant.getId()}__/review}">すべてのレビューを見る</a>
+									</div>
 								</div>
-								
-								<!-- レビュー機能 -->
 
 								<!-- 予約 -->
 								<div class="col-4 col-lg-4 px-0 ps-lg-4 mb-4">

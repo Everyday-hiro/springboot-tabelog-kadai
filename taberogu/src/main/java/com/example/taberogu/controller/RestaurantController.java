@@ -12,16 +12,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.taberogu.entity.Restaurant;
+import com.example.taberogu.entity.Review;
 import com.example.taberogu.repository.RestaurantRepository;
+import com.example.taberogu.repository.ReviewRepository;
 
 @Controller
 @RequestMapping("/restaurant")
 public class RestaurantController {
 
 	private final RestaurantRepository restaurantRepository;
+	private final ReviewRepository reviewRepository;
 
-	public RestaurantController(RestaurantRepository restaurantRepository) {
+	public RestaurantController(RestaurantRepository restaurantRepository, ReviewRepository reviewRepository) {
 		this.restaurantRepository = restaurantRepository;
+		this.reviewRepository = reviewRepository;
 	}
 
 	@GetMapping
@@ -70,13 +74,16 @@ public class RestaurantController {
 
 		return "restaurant/index";
 	}
-	
+
 	@GetMapping("/{id}")
-	public String show(@PathVariable(name = "id") Integer id, Model model) {
+	public String show(@PathVariable(name = "id") Integer id, Model model,
+			@PageableDefault(page = 0, size = 6, sort = "createdAt", direction = Direction.DESC) Pageable pageable) {
 		Restaurant restaurant = restaurantRepository.getReferenceById(id);
-		
+		Page<Review> reviewPage = reviewRepository.findTop3ByRestaurantIdOrderByCreatedAtDesc(id, pageable);
+
 		model.addAttribute("restaurant", restaurant);
-		
+		model.addAttribute("reviewPage", reviewPage);
+
 		return "restaurant/show";
 	}
 }
