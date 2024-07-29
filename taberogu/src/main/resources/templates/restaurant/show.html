@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+
+<head>
+	<div th:replace="~{fragment :: meta}"></div>
+
+	<div th:replace="~{fragment :: styles}"></div>
+
+	<title>店舗詳細</title>
+</head>
+
+<body>
+	<div class="samuraitabelog-wrapper">
+		<div th:replace="~{fragment :: header}"></div>
+
+		<main>
+			<div class="container pt-4 pb-5 samuraitabelog-container">
+				<div class="row justify-content-center">
+					<div class="col-xxl-9 col-xl-10 col-lg-11">
+						<nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0">
+								<li class="breadcrumb-item"><a th:href="@{/}">トップページ</a></li>
+								<li class="breadcrumb-item"><a th:href="@{/restaurant}">店舗一覧</a></li>
+								<li class="breadcrumb-item active" aria-current="page">店舗詳細</li>
+							</ol>
+						</nav>
+						<div class="container">
+							<div class="row">
+								<h1 class="col-8 mb-4" th:text="${restaurant.getName()}"></h1>
+
+								<div class="mb-4 container">
+									<img th:if="${restaurant.getImage()}"
+										th:src="@{/storage/__${restaurant.getImage()}__}" class="w-100" alt="店舗画像">
+									<img th:unless="${restaurant.getImage()}" th:src="@{/images/noImage.png}"
+										class="w-100" alt="NO IMAGE">
+								</div>
+
+								<div class="container">
+									<div class="row">
+										<div class="row pb-2 mb-2 border-bottom">
+											<div class="col-4">
+												<span class="fw-bold">店舗名</span>
+											</div>
+											<div class="col">
+												<span th:text="${restaurant.getName()}"></span>
+											</div>
+										</div>
+
+										<div class="row pb-2 mb-2 border-bottom">
+											<div class="col-4">
+												<span class="fw-bold">カテゴリ</span>
+											</div>
+											<div class="col">
+												<span th:text="${restaurant.getCategory()}"></span>
+											</div>
+										</div>
+
+										<div class="row pb-2 mb-2 border-bottom">
+											<div class="col-4">
+												<span class="fw-bold">説明</span>
+											</div>
+											<div class="col">
+												<span th:text="${restaurant.getRestaurantDescription()}"></span>
+											</div>
+										</div>
+
+										<div class="row pb-2 mb-2 border-bottom">
+											<div class="col-4">
+												<span class="fw-bold">住所</span>
+											</div>
+											<div class="col">
+												<span th:text="${restaurant.getAddress()}"></span>
+											</div>
+										</div>
+
+										<div class="row pb-2 mb-2 border-bottom">
+											<div class="col-4">
+												<span class="fw-bold">郵便番号</span>
+											</div>
+											<div class="col">
+												<span th:text="${restaurant.getPostalCode()}"></span>
+											</div>
+										</div>
+
+										<div class="row pb-2 mb-2 border-bottom">
+											<div class="col-4">
+												<span class="fw-bold">営業時間</span>
+											</div>
+											<div class="col">
+												<span th:text="${restaurant.getOpenTime()}"></span>
+											</div>
+										</div>
+
+										<div class="row pb-2 mb-2 border-bottom">
+											<div class="col-4">
+												<span class="fw-bold">定休日</span>
+											</div>
+											<div class="col">
+												<span th:text="${restaurant.getClosingDay()}"></span>
+											</div>
+										</div>
+
+										<div class="row pb-2 mb-2 border-bottom">
+											<div class="col-4">
+												<span class="fw-bold">予算</span>
+											</div>
+											<div class="col">
+												<span th:text="${restaurant.getPrice()}"></span>
+											</div>
+										</div>
+
+										<div class="row pb-2 mb-2 border-bottom">
+											<div class="col-4">
+												<span class="fw-bold">電話番号</span>
+											</div>
+											<div class="col">
+												<span th:text="${restaurant.getPhoneNumber()}"></span>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<!-- 予約 -->
+								<div 
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
+</body>
+
+</html>
