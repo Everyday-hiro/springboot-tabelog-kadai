@@ -9,3 +9,7 @@ INSERT IGNORE INTO restaurant (id, category, name, image, restaurant_description
 INSERT IGNORE INTO restaurant (id, category, name, image, restaurant_description, phone_number, open_time, price, address, postal_code, closing_day) VALUES (9, '丼物', 'SAMURAI屋', 'house09.jpg', '最寄駅から10分の場所にあり割といい立地である。', '052-334-5347', '10:00~23:00', '1000円~2000円', '愛知県名古屋市中区牡丹2-3290' , '457-6609', '金曜日')
 INSERT IGNORE INTO restaurant (id, category, name, image, restaurant_description, phone_number, open_time, price, address, postal_code, closing_day) VALUES (10, '丼物', '侍丼', 'house10.jpg', '最寄駅から10分の場所にあり割といい立地である。', '052-334-5347', '9:00~22:00', '1000円~2000円', '愛知県名古屋市関西区都響2-3290' , '457-6609', '土曜日')
 INSERT IGNORE INTO restaurant (id, category, name, image, restaurant_description, phone_number, open_time, price, address, postal_code, closing_day) VALUES (11, '和食', '和食侍', 'house01.jpg', '最寄駅から10分の場所にあり割といい立地である。', '052-334-5347', '12:00~20:00', '2000円~4000円', '愛知県名古屋市関東区加賀和那2-3290' , '457-6609', '日曜日')
+
+INSERT IGNORE INTO role(id, name) VALUES (1, 'ROLE_FREE')
+INSERT IGNORE INTO role(id, name) VALUES (2, 'ROLE_PAID')
+INSERT IGNORE INTO role(id, name) VALUES (3, 'ROLE_ADMIN')
