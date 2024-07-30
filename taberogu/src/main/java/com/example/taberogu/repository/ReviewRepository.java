@@ -10,4 +10,6 @@ public interface ReviewRepository extends JpaRepository <Review, Integer>{
 
 	Page<Review> findTop3ByRestaurantIdOrderByCreatedAtDesc(Integer restaurantId, Pageable pageable);
 
+	Page<Review> findByRestaurantId(Integer id, Pageable pageable);
+
 }
