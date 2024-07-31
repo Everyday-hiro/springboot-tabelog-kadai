@@ -144,10 +144,10 @@ public class ReviewController {
 	 */
 	@PostMapping("/{id}/delete")
 	public String delete(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes, Model model) {
-		Review review = reviewRepository.getReferenceById(id);
-		model.addAttribute("review", review);
+		Review review = reviewRepository.findById(id).orElseThrow(() -> new RuntimeException("Review not found"));
 		reviewRepository.deleteById(id);
+		Integer restaurantId = review.getRestaurant().getId();
 		redirectAttributes.addFlashAttribute("successMessage", "レビューを削除しました。");
-		return "redirect:/restaurant";
+		return "redirect:/restaurant/" + restaurantId;
 	}
 }
