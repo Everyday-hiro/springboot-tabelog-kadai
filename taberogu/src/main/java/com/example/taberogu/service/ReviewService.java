@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.taberogu.entity.Restaurant;
 import com.example.taberogu.entity.Review;
 import com.example.taberogu.entity.User;
+import com.example.taberogu.form.ReviewEditForm;
 import com.example.taberogu.form.ReviewRegisterForm;
 import com.example.taberogu.repository.ReviewRepository;
 import com.example.taberogu.security.UserDetailsImpl;
@@ -20,7 +21,12 @@ public class ReviewService {
 		this.reviewRepository = reviewRepository;
 	}
 
-	//レビュー登録
+	/**
+	 * レビューを投稿するための処理を行うメソッドです
+	 * @param restaurant
+	 * @param reviewRegisterForm
+	 * @param userDetailsImpl
+	 */
 	@Transactional
 	public void create(Restaurant restaurant, ReviewRegisterForm reviewRegisterForm,
 			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
@@ -31,6 +37,23 @@ public class ReviewService {
 		review.setStar(reviewRegisterForm.getStar());
 		review.setDescription(reviewRegisterForm.getDescription());
 		review.setRestaurant(restaurant);
+		review.setUser(user);
+
+		reviewRepository.save(review);
+	}
+
+	/**
+	 * レビューの内容を変更するための処理を行うメソッドです。
+	 */
+	@Transactional
+	public void update(Integer id, ReviewEditForm reviewEditForm,
+			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+		Review review = reviewRepository.getReferenceById(reviewEditForm.getId());
+		User user = userDetailsImpl.getUser();
+
+		review.setName(user.getName());
+		review.setStar(reviewEditForm.getStar());
+		review.setDescription(reviewEditForm.getDescription());
 		review.setUser(user);
 
 		reviewRepository.save(review);
