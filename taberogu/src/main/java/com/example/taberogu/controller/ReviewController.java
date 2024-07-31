@@ -138,4 +138,16 @@ public class ReviewController {
 
 		return "redirect:/restaurant/" + restaurantId;
 	}
+
+	/**
+	 * レビューを削除するためのメソッドです。
+	 */
+	@PostMapping("/{id}/delete")
+	public String delete(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes, Model model) {
+		Review review = reviewRepository.getReferenceById(id);
+		model.addAttribute("review", review);
+		reviewRepository.deleteById(id);
+		redirectAttributes.addFlashAttribute("successMessage", "レビューを削除しました。");
+		return "redirect:/restaurant";
+	}
 }
