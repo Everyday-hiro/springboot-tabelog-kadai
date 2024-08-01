@@ -48,3 +48,13 @@ CREATE TABLE IF NOT EXISTS review
    FOREIGN KEY (restaurant_id) REFERENCES restaurant (id),
    FOREIGN KEY (user_id) REFERENCES user (id)
 );
+CREATE TABLE IF NOT EXISTS favorite
+(
+   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   user_id INT NOT NULL,
+   restaurant_id INT NOT NULL,
+   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+   FOREIGN KEY (restaurant_id) REFERENCES restaurant (id),
+   FOREIGN KEY (user_id) REFERENCES user (id)
+);

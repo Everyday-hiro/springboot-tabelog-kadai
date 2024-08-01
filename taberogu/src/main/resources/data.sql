@@ -27,10 +27,16 @@ INSERT IGNORE INTO user (id, name, furigana, postal_code, address, phone_number,
 INSERT IGNORE INTO user (id, name, furigana, postal_code, address, phone_number, email, password, role_id, enabled) VALUES (11, '侍 秋美', 'サムライ アキミ', '606-8235', '京都府京都市左京区田中西春菜町X-XX-XX', '090-1234-5678', 'akimi.samurai@example.com', 'password', 1, false);
 INSERT IGNORE INTO user (id, name, furigana, postal_code, address, phone_number, email, password, role_id, enabled) VALUES (12, '侍 信平', 'サムライ シンペイ', '673-1324', '兵庫県加東市新定X-XX-XX', '090-1234-5678', 'shinpei.samurai@example.com', 'password', 2, false);
 
-INSERT IGNORE INTO review(id, name, star, description, restaurant_id, user_id) VALUES (1, '侍 幸美', 5, '静かでまったりできて最高でした。', 1, 1);
-INSERT IGNORE INTO review(id, name, star, description, restaurant_id, user_id) VALUES (2, '侍 花子', 3, 'まあまあでした。', 1, 4);
+INSERT IGNORE INTO review(id, name, star, description, restaurant_id, user_id) VALUES (1, '侍 幸美', 5, '静かでまったりできて最高でした。', 1, 4);
+INSERT IGNORE INTO review(id, name, star, description, restaurant_id, user_id) VALUES (2, '侍 花子', 3, 'まあまあでした。', 1, 2);
 INSERT IGNORE INTO review(id, name, star, description, restaurant_id, user_id) VALUES (3, '侍 正保', 4, 'コーヒーが最高です。', 1, 6);
 INSERT IGNORE INTO review(id, name, star, description, restaurant_id, user_id) VALUES (4, '侍 安民', 5, 'ゆっくりできる場所です。', 1, 8);
 INSERT IGNORE INTO review(id, name, star, description, restaurant_id, user_id) VALUES (5, '侍 裕子', 5, '雰囲気がゆっくりできて落ち着ける場所です。', 1, 10);
 INSERT IGNORE INTO review(id, name, star, description, restaurant_id, user_id) VALUES (6, '侍 信平', 5, 'コーヒーだけではなく、カフェオレやランチのトーストなども美味しく、いっぱい食べれて最高でした。', 1, 12);
 
+INSERT IGNORE INTO favorite (id, user_id, restaurant_id) VALUES (1, 2, 1);
+INSERT IGNORE INTO favorite (id, user_id, restaurant_id) VALUES (2, 2, 3);
+INSERT IGNORE INTO favorite (id, user_id, restaurant_id) VALUES (3, 2, 5);
+INSERT IGNORE INTO favorite (id, user_id, restaurant_id) VALUES (4, 2, 7);
+INSERT IGNORE INTO favorite (id, user_id, restaurant_id) VALUES (5, 2, 9);
+INSERT IGNORE INTO favorite (id, user_id, restaurant_id) VALUES (6, 2, 11);
