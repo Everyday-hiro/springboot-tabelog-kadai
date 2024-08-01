@@ -197,7 +197,7 @@
 											</div>
 										</div>
 									</div>
-									<div class="text-center">
+									<div class="text-center" th:if="${reviewPage.getTotalElements() > 2}">
 										<a th:href="@{/review/__${restaurant.getId()}__}">すべてのレビューを見る</a>
 									</div>
 								</div>

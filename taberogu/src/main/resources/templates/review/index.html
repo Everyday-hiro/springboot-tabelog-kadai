@@ -33,14 +33,12 @@
 							<div class="col-md-6" th:each="review : ${reviewPage}">
 								<div class="card m-1">
 									<div class="card-body">
-										<h3 class="card-title mb-3" th:text="${review.getName()}"></h3>
-
+										<h3 class="mb-3 text-left" th:text="${review.getName()}"></h3>
 
 										<a class="text-right" th:href="@{/review/__${review.getId()}__/edit}">編集</a>
 										<a th:href="@{/review/__${review.getId()}__/delete}"
-											class="samuraitravel-link-danger" data-bs-toggle="modal"
+											class="samuraitabelog-link-danger" data-bs-toggle="modal"
 											th:data-bs-target="${'#deleteReviewModal' + review.getId()}">削除</a>
-
 
 										<p class="card-text mb-2">
 											<span class="text-muted"
