@@ -24,6 +24,22 @@
 								<li class="breadcrumb-item active" aria-current="page">店舗詳細</li>
 							</ol>
 						</nav>
+						
+						<div th:if="${notFavorite}">
+							<form method="post" th:action="@{/favorite/add/__${restaurant.getId()}__}">
+								<input type="hidden" name="restaurant" th:value="*{restaurant.getId()}">
+								<input type="hidden" name="user" th:value="*{user}">
+								<button type="submit">&#9734お気に入り追加</button>
+							</form>
+						</div>
+						<div th:unless="${notFavorite}">
+							<form method="post" th:action="@{/favorite/delete/__${restaurant.getId()}__}">
+								<input type="hidden" name="restaurant" th:value="*{restaurant.getId()}">
+								<input type="hidden" name="restaurant" th:value="*{user}">
+								<button type="submit">&#9733お気に入り解除</button>
+							</form>
+						</div>
+						
 						<div class="container">
 							<div class="row">
 								<div class="col-8">

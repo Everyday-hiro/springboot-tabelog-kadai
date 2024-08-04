@@ -61,7 +61,7 @@
 
 					<div class="col-md-7">
 						<!-- 新着店舗 -->
-						<h2 class="text-center mb-3">新着店舗</h2>
+						<h2 class="text-center mb-3 pt-3">新着店舗</h2>
 						<div class="row row-cols-lg-3 row-cols-1 g-3 mb-5">
 							<div class="col" th:each="newRestaurant : ${newRestaurant}">
 								<a th:href="@{/restaurant/__${newRestaurant.getId()}__}"
@@ -106,7 +106,7 @@
 
 					<!-- エリア -->
 					<div class="col-md-3">
-						<h2 class="text-center mb-3">エリア</h2>
+						<h2 class="text-center mb-3 pt-4">エリア</h2>
 						<table class="table">
 							<tbody>
 								<tr>
