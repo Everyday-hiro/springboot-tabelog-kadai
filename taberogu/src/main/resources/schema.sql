@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS favorite
    FOREIGN KEY (restaurant_id) REFERENCES restaurant (id),
    FOREIGN KEY (user_id) REFERENCES user (id)
 );
-CREATE TABLE IF NOT EXISTS verification_tokens
+CREATE TABLE IF NOT EXISTS verification_token
 (
    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
    user_id INT NOT NULL UNIQUE,
