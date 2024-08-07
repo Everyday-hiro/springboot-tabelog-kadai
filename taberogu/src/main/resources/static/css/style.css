@@ -16,6 +16,12 @@ body {
 	height: 30px;
 }
 
+.samuraitabelog-name{
+	font-family: '玉ねぎ楷書　激', sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+}
+
 a {
 	color: #5196a6;
 	text-decoration: none !important;
