@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.taberogu.entity.Role;
 import com.example.taberogu.entity.User;
 import com.example.taberogu.form.SignupForm;
+import com.example.taberogu.form.UserEditForm;
 import com.example.taberogu.repository.RoleRepository;
 import com.example.taberogu.repository.UserRepository;
 
@@ -40,6 +41,20 @@ public class UserService {
 		return userRepository.save(user);
 	}
 
+	@Transactional
+	public void update(UserEditForm userEditForm) {
+		User user = userRepository.getReferenceById(userEditForm.getId());
+
+		user.setName(userEditForm.getName());
+		user.setFurigana(userEditForm.getFurigana());
+		user.setPostalCode(userEditForm.getPostalCode());
+		user.setAddress(userEditForm.getAddress());
+		user.setPhoneNumber(userEditForm.getPhoneNumber());
+		user.setEmail(userEditForm.getEmail());
+
+		userRepository.save(user);
+	}
+
 	public boolean isEmailRegistered(String email) {
 		User user = userRepository.findByEmail(email);
 		return user != null;
@@ -53,5 +68,10 @@ public class UserService {
 	public void enableUser(User user) {
 		user.setEnabled(true);
 		userRepository.save(user);
+	}
+
+	public boolean isEmailChanged(UserEditForm userEditForm) {
+		User currentUser = userRepository.getReferenceById(userEditForm.getId());
+		return !userEditForm.getEmail().equals(currentUser.getEmail());
 	}
 }
