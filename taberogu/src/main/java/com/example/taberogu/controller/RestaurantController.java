@@ -1,5 +1,7 @@
 package com.example.taberogu.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -84,14 +86,19 @@ public class RestaurantController {
 
 	@GetMapping("/{id}")
 	public String show(@PathVariable(name = "id") Integer id, Model model,
-			@PageableDefault(page = 0, size = 6, sort = "createdAt", direction = Direction.DESC) Pageable pageable,
+			@PageableDefault(page = 0, size = 3, sort = "createdAt", direction = Direction.DESC) Pageable pageable,
 			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
-		Restaurant restaurant = restaurantRepository.getReferenceById(id);
-		Page<Review> reviewPage = reviewRepository.findTop3ByRestaurantIdOrderByCreatedAtDesc(id, pageable);
 
-		User user = userDetailsImpl.getUser();
-		boolean notFavorite = !favoriteRepository.favoriteJudge(restaurant, user);
-		model.addAttribute("notFavorite", notFavorite);
+		Restaurant restaurant = restaurantRepository.getReferenceById(id);
+		Page<Review> reviewPage = reviewRepository.findByRestaurantId(id, pageable);
+
+		if (userDetailsImpl != null) {
+			User user = userDetailsImpl.getUser();
+			List<Review> userHasReview = reviewRepository.findByUserAndRestaurantId(user, id);
+			boolean notFavorite = !favoriteRepository.favoriteJudge(restaurant, user);
+			model.addAttribute("userHasReview", !userHasReview.isEmpty());
+			model.addAttribute("notFavorite", notFavorite);
+		}
 		model.addAttribute("restaurant", restaurant);
 		model.addAttribute("reviewPage", reviewPage);
 
