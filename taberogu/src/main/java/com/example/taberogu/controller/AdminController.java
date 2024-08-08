@@ -1,7 +1,9 @@
 package com.example.taberogu.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,9 +27,11 @@ public class AdminController {
 	}
 
 	@GetMapping("/restaurant")
-	public String restaurant(Model model) {
-		List<Restaurant> restaurant = restaurantRepository.findAll();
-		model.addAttribute("restaurant", restaurant);
+	public String restaurant(
+			Model model,
+			@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable) {
+		Page<Restaurant> restaurantPage = restaurantRepository.findAll(pageable);
+		model.addAttribute("restaurantPage", restaurantPage);
 		return "admin/adminRestaurant";
 	}
 }
