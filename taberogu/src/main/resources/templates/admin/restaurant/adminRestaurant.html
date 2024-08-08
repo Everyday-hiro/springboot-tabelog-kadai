@@ -25,11 +25,17 @@
 								<div class="input-group">
 									<input type="text" class="form-control" name="keyword" th:value="${keyword}"
 										placeholder="民宿名">
-									<button type="submit" class="btn text-white shadow-sm samuraitabelog-btn">検索</button>
+									<button type="submit"
+										class="btn text-white shadow-sm samuraitabelog-btn">検索</button>
 								</div>
 							</form>
 
-							<a href="#" class="btn text-white shadow-sm mb-3 samuraitabelog-btn">登録</a>
+							<a th:href="@{/admin/restaurant/register}"
+								class="btn text-white shadow-sm mb-3 samuraitabelog-btn">登録</a>
+						</div>
+
+						<div th:if="${successMessage}" class="alert alert-info">
+							<span th:text="${successMessage}"></span>
 						</div>
 
 						<table class="table">
