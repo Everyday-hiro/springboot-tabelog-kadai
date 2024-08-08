@@ -44,6 +44,10 @@ footer {
 
 }
 
+.samuraitravel-pre-wrap {
+   white-space: pre-wrap;
+ }
+
 .samuraitabelog-btn {
 	background-color: #5196a6 !important;
 	transition: 0.1s;
