@@ -39,7 +39,7 @@ public class Restaurant {
 	private String openTime;
 
 	@Column(name = "price")
-	private String price;
+	private Integer price;
 
 	@Column(name = "address")
 	private String address;
