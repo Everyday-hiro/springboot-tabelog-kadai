@@ -20,7 +20,15 @@
 
 						<h1 class="mb-4 text-center">店舗一覧</h1>
 
-						<div class="d-flex justify-content-end">
+						<div class="d-flex justify-content-between align-items-end fle-wrap">
+							<form method="get" th:action="@{/admin/restaurant}" class="mb-3">
+								<div class="input-group">
+									<input type="text" class="form-control" name="keyword" th:value="${keyword}"
+										placeholder="民宿名">
+									<button type="submit" class="btn text-white shadow-sm samuraitabelog-btn">検索</button>
+								</div>
+							</form>
+
 							<a href="#" class="btn text-white shadow-sm mb-3 samuraitabelog-btn">登録</a>
 						</div>
 
@@ -55,7 +63,7 @@
 									<li class="page-item">
 										<span th:if="${restaurantPage.isFirst()}" class="page-link disabled">前</span>
 										<a th:unless="${restaurantPage.isFirst()}"
-											th:href="@{/admin/restaurant(page = ${restaurantPage.getNumber() - 1})}"
+											th:href="@{/admin/restaurant(page = ${restaurantPage.getNumber() - 1}, keyword = ${keyword})}"
 											class="page-link samuraitabelog-page-link">前</a>
 									</li>
 									<li th:each="i : ${#numbers.sequence(0, restaurantPage.getTotalPages() - 1)}"
@@ -63,13 +71,13 @@
 										<span th:if="${i == restaurantPage.getNumber()}"
 											class="page-link active samuraitabelog-active" th:text="${i + 1}"></span>
 										<a th:unless="${i == restaurantPage.getNumber()}"
-											th:href="@{/admin/restaurant(page = ${i})}"
+											th:href="@{/admin/restaurant(page = ${i}, keyword = ${keyword})}"
 											class="page-link samuraitabelog-page-link" th:text="${i + 1}"></a>
 									</li>
 									<li class="page-item">
 										<span th:if="${restaurantPage.isLast()}" class="page-link disabled">次</span>
 										<a th:unless="${restaurantPage.isLast()}"
-											th:href="@{/admin/restaurant(page = ${restaurantPage.getNumber() + 1})}"
+											th:href="@{/admin/restaurant(page = ${restaurantPage.getNumber() + 1}, keyword = ${keyword})}"
 											class="page-link samuraitabelogl-page-link">次</a>
 									</li>
 								</ul>

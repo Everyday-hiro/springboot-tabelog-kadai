@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.taberogu.entity.Restaurant;
 import com.example.taberogu.repository.RestaurantRepository;
@@ -29,9 +30,17 @@ public class AdminController {
 	@GetMapping("/restaurant")
 	public String restaurant(
 			Model model,
-			@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable) {
-		Page<Restaurant> restaurantPage = restaurantRepository.findAll(pageable);
+			@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable,
+			@RequestParam(name = "keyword", required = false) String keyword) {
+		Page<Restaurant> restaurantPage;
+
+		if (keyword != null && !keyword.isEmpty()) {
+			restaurantPage = restaurantRepository.findByNameLike("%" + keyword + "%", pageable);
+		} else {
+			restaurantPage = restaurantRepository.findAll(pageable);
+		}
 		model.addAttribute("restaurantPage", restaurantPage);
+		model.addAttribute("keyword", keyword);
 		return "admin/adminRestaurant";
 	}
 }
