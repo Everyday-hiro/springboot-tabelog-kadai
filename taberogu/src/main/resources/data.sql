@@ -40,3 +40,10 @@ INSERT IGNORE INTO favorite (id, user_id, restaurant_id) VALUES (3, 2, 5);
 INSERT IGNORE INTO favorite (id, user_id, restaurant_id) VALUES (4, 2, 7);
 INSERT IGNORE INTO favorite (id, user_id, restaurant_id) VALUES (5, 2, 9);
 INSERT IGNORE INTO favorite (id, user_id, restaurant_id) VALUES (6, 2, 11);
+
+INSERT IGNORE INTO category (id, name) VALUES(1, "カフェ");
+INSERT IGNORE INTO category (id, name) VALUES(2, "焼肉");
+INSERT IGNORE INTO category (id, name) VALUES(3, "寿司");
+INSERT IGNORE INTO category (id, name) VALUES(4, "中華");
+INSERT IGNORE INTO category (id, name) VALUES(5, "丼物");
+INSERT IGNORE INTO category (id, name) VALUES(6, "和食");
