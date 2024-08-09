@@ -63,9 +63,10 @@ public class RestaurantController {
 			}
 		} else if (category != null) {
 			if (order != null && order.equals("priceAsc")) {
-				restaurantPage = restaurantRepository.findByCategoryLikeOrderByPriceAsc(category, pageable);
+				restaurantPage = restaurantRepository.findByCategoryLikeOrderByPriceAsc("%" + category + "%", pageable);
 			} else {
-				restaurantPage = restaurantRepository.findByCategoryLikeOrderByCreatedAtDesc(category, pageable);
+				restaurantPage = restaurantRepository.findByCategoryLikeOrderByCreatedAtDesc("%" + category + "%",
+						pageable);
 			}
 		} else {
 			if (order != null && order.equals("priceAsc")) {
