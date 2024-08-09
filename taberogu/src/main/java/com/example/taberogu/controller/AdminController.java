@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.taberogu.entity.Restaurant;
+import com.example.taberogu.form.RestaurantEditForm;
 import com.example.taberogu.form.RestaurantRegisterForm;
 import com.example.taberogu.repository.RestaurantRepository;
 import com.example.taberogu.service.RestaurantService;
@@ -76,5 +77,20 @@ public class AdminController {
 		restaurantService.create(restaurantRegisterForm);
 		redirectAttributes.addFlashAttribute("successMessage", "店舗を登録できました。");
 		return "redirect:/admin/restaurant";
+	}
+
+	@GetMapping("/restaurant/{id}/edit")
+	public String edit(@PathVariable(name = "id") Integer id, Model model) {
+		Restaurant restaurant = restaurantRepository.getReferenceById(id);
+		String image = restaurant.getImage();
+		RestaurantEditForm restaurantEditForm = new RestaurantEditForm(restaurant.getId(), restaurant.getName(), null,
+				restaurant.getCategory(), restaurant.getRestaurantDescription(), restaurant.getPhoneNumber(),
+				restaurant.getOpenTime(), restaurant.getPrice(), restaurant.getAddress(), restaurant.getPostalCode(),
+				restaurant.getClosingDay());
+
+		model.addAttribute("image", image);
+		model.addAttribute("restaurantEditForm", restaurantEditForm);
+
+		return "admin/restaurant/edit";
 	}
 }
