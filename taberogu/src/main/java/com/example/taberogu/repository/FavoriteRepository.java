@@ -1,5 +1,7 @@
 package com.example.taberogu.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,5 +19,7 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Integer> {
 	default boolean favoriteJudge(Restaurant restaurant, User user) {
 		return findByRestaurantAndUser(restaurant, user) != null;
 	}
+
+	List<Favorite> findTop3ByOrderByCreatedAtDesc();
 
 }

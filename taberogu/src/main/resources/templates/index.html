@@ -59,14 +59,14 @@
 							</div>
 						</div>
 
-						<a class="text-center mb-3 text-success" th:href="@{/restaurant}">
-							店舗一覧へ
-						</a>
 					</div>
 
-					<div class="col-md-7">
+					<div class="row col-md-7">
 						<!-- 新着店舗 -->
-						<h2 class="text-center mb-3 pt-3">新着店舗</h2>
+						<h2 class="col-6 text-center mb-1 pt-5">新着店舗</h2>
+						<a class="col-6 pt-5 text-success text-left" th:href="@{/restaurant}">
+							店舗一覧へ
+						</a>
 						<div class="row row-cols-lg-3 row-cols-1 g-3 mb-5">
 							<div class="col" th:each="newRestaurant : ${newRestaurant}">
 								<a th:href="@{/restaurant/__${newRestaurant.getId()}__}"
@@ -95,9 +95,34 @@
 
 						<!-- お気に入り店舗 -->
 						<div class="row mb-5">
-							<h2 class="text-center mb-3">お気に入り店舗</h2>
+							<h2 class="col-7 text-center mb-3">お気に入り店舗</h2>
+							<a class="col-5 boder-bottom" th:href="@{/favorite/}">お気に入り店舗一覧へ</a>
 							<div class="row row-cols-lg-3 row-cols-1 g-3 mb-5">
-
+								<div class="col" th:each="newFavorite : ${newFavorite}">
+									<a th:href="@{/restaurant/__${newFavorite.restaurant.getId()}__}"
+										class="link-dark samuraitabelog-card-link">
+										<div class="card h-100">
+											<img th:if="${newFavorite.restaurant.getImage()}"
+												th:src="@{/storage/__${newFavorite.restaurant.getImage()}__}"
+												class="card-img-top samuraitravel-vertical-card-image" alt="店舗画像">
+											<img th:unless="${newFavorite.restaurant.getImage()}"
+												th:src="@{/images/noImage.png}"
+												class="card-img-top samuraitravel-vertical-card-image" alt="NO IMAGE">
+											<div class="card-body">
+												<h3 class="card-title" th:text="${newFavorite.restaurant.getName()}">
+												</h3>
+												<p class="card-text mb-1">
+													<small class="text-muted"
+														th:text="${newFavorite.restaurant.getAddress()}"></small>
+												</p>
+												<p class="card-text">
+													<span
+														th:text="${#numbers.formatInteger(newFavorite.restaurant.getPrice(), 1, 'COMMA') + '円'}"></span>
+												</p>
+											</div>
+										</div>
+									</a>
+								</div>
 							</div>
 						</div>
 						<!-- 価格の安い店舗 -->
