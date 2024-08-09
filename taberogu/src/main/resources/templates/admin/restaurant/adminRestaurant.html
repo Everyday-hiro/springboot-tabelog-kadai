@@ -58,6 +58,23 @@
 									<td th:text="${restaurant.getAddress()}"></td>
 									<td th:text="${restaurant.getPhoneNumber()}"></td>
 									<td><a th:href="@{/admin/restaurant/__${restaurant.getId()}__}">詳細</a></td>
+									<td><a href="#" class="samuraitabelog-link-danger" data-bs-toggle="modal" th:data-bs-target="${'#deleteRestaurantModal' + restaurant.getId()}">削除</a></td>
+									
+									<div class="modal fade" th:id="${'deleteRestaurantModal' + restaurant.getId()}" tabindex="-1" th:aria-labelledby="${'deleteRestaurantModalLabel' + restaurant.getId()}">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" th:id="${'deleterestaurantModalLabel' + restaurant.getId()}" th:text="${restaurant.getName() + 'を削除してもよろしでしょうか？'}"></h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+												</div>
+												<div class="modal-footer">
+													<form method="post" th:action="@{/admin/restaurant/__${restaurant.getId()}__/delete}">
+														<button type="submit" class="btn samuraitabelog-btn-danger text-white shadow-sm">削除</button>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>
 								</tr>
 							</tbody>
 						</table>
