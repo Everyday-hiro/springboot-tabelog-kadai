@@ -155,7 +155,7 @@
 							<p th:unless="${restaurantPage.getTotalPages() > 1}" class="fs-5 mb-3"
 								th:text="${'検索結果：' + restaurantPage.getTotalElements() + '件'}"></p>
 
-							<form method="get" th:action="@{/restaurant}" class="mb-3 samuraitravel-sort-box">
+							<form method="get" th:action="@{/restaurant}" class="mb-3 samuraitabelog-sort-box">
 								<input th:if="${keyword}" type="hidden" name="keyword" th:value="${keyword}">
 								<input th:if="${category}" type="hidden" name="area" th:value="${category}">
 								<input th:if="${area}" type="hidden" name="price" th:value="${area}">
@@ -234,7 +234,6 @@
 								</ul>
 							</nav>
 						</div>
-						</a>
 					</div>
 				</div>
 			</div>

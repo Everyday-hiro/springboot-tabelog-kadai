@@ -23,7 +23,7 @@ public class RestaurantEditForm {
 	private String category;
 
 	@NotBlank(message = "説明を入力してください。")
-	private String restuarantDescription;
+	private String restaurantDescription;
 
 	@NotBlank(message = "電話番号を入力してください。")
 	private String phoneNumber;
