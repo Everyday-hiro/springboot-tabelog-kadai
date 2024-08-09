@@ -93,4 +93,15 @@ public class AdminController {
 
 		return "admin/restaurant/edit";
 	}
+
+	@PostMapping("/restaurant/{id}/update")
+	public String update(@ModelAttribute @Validated RestaurantEditForm restaurantEditForm, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
+		if (bindingResult.hasErrors()) {
+			return "admin/restaurant/edit";
+		}
+		restaurantService.update(restaurantEditForm);
+		redirectAttributes.addFlashAttribute("successMessage", "店舗情報を編集しました。");
+		return "redirect:/admin/restaurant";
+	}
 }
