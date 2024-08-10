@@ -6,20 +6,29 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.taberogu.entity.Category;
+import com.example.taberogu.form.CategoryRegisterForm;
 import com.example.taberogu.repository.CategoryRepository;
+import com.example.taberogu.service.CategoryService;
 
 @Controller
 @RequestMapping("/admin/category")
 public class AdminCategoryController {
 	private final CategoryRepository categoryRepository;
+	private final CategoryService categoryService;
 
-	public AdminCategoryController(CategoryRepository categoryRepository) {
+	public AdminCategoryController(CategoryRepository categoryRepository, CategoryService categoryService) {
 		this.categoryRepository = categoryRepository;
+		this.categoryService = categoryService;
 	}
 
 	@GetMapping
@@ -41,4 +50,20 @@ public class AdminCategoryController {
 		return "admin/category/index";
 	}
 
+	@GetMapping("/register")
+	public String register(Model model) {
+		model.addAttribute("categoryRegisterForm", new CategoryRegisterForm());
+		return "admin/category/register";
+	}
+
+	@PostMapping("/create")
+	public String create(@ModelAttribute @Validated CategoryRegisterForm categoryRegisterForm,
+			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+		if (bindingResult.hasErrors()) {
+			return "admin/category/register";
+		}
+		categoryService.create(categoryRegisterForm);
+		redirectAttributes.addFlashAttribute("successMessage", "カテゴリを登録できました。");
+		return "redirect:/admin/category";
+	}
 }
