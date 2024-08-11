@@ -95,7 +95,9 @@ public class AdminController {
 	}
 
 	@PostMapping("/restaurant/{id}/update")
-	public String update(@ModelAttribute @Validated RestaurantEditForm restaurantEditForm, BindingResult bindingResult,
+	public String update(
+			@ModelAttribute @Validated RestaurantEditForm restaurantEditForm,
+			BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
 			return "admin/restaurant/edit";
