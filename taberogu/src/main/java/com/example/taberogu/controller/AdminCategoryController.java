@@ -35,7 +35,7 @@ public class AdminCategoryController {
 
 	@GetMapping
 	public String index(
-			@RequestParam(name = "keword", required = false) String keyword,
+			@RequestParam(name = "keyword", required = false) String keyword,
 			@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable,
 			Model model) {
 		Page<Category> categoryPage;
