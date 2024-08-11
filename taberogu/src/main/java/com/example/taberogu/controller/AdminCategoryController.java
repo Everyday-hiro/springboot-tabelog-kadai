@@ -91,4 +91,11 @@ public class AdminCategoryController {
 		redirectAttributes.addFlashAttribute("successMessage", "カテゴリを編集しました。");
 		return "redirect:/admin/category";
 	}
+
+	@PostMapping("/{id}/delete")
+	public String delete(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes) {
+		categoryRepository.deleteById(id);
+		redirectAttributes.addFlashAttribute("successMessage", "カテゴリを削除しました。");
+		return "redirect:/admin/category";
+	}
 }
