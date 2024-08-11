@@ -10,12 +10,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.taberogu.entity.Category;
+import com.example.taberogu.form.CategoryEditForm;
 import com.example.taberogu.form.CategoryRegisterForm;
 import com.example.taberogu.repository.CategoryRepository;
 import com.example.taberogu.service.CategoryService;
@@ -65,5 +67,13 @@ public class AdminCategoryController {
 		categoryService.create(categoryRegisterForm);
 		redirectAttributes.addFlashAttribute("successMessage", "カテゴリを登録できました。");
 		return "redirect:/admin/category";
+	}
+
+	@GetMapping("/{id}/edit")
+	public String edit(@PathVariable(name = "id") Integer id, Model model) {
+		Category category = categoryRepository.getReferenceById(id);
+		CategoryEditForm categoryEditForm = new CategoryEditForm(category.getId(), category.getName());
+		model.addAttribute("categoryEditForm", categoryEditForm);
+		return "admin/category/edit";
 	}
 }
