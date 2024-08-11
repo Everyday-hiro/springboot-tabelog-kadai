@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.taberogu.entity.Category;
+import com.example.taberogu.form.CategoryEditForm;
 import com.example.taberogu.form.CategoryRegisterForm;
 import com.example.taberogu.repository.CategoryRepository;
 
@@ -20,6 +21,14 @@ public class CategoryService {
 		Category category = new Category();
 
 		category.setName(categoryRegisterForm.getName());
+		categoryRepository.save(category);
+	}
+
+	@Transactional
+	public void update(Integer id, CategoryEditForm categoryEditForm) {
+		Category category = categoryRepository.getReferenceById(categoryEditForm.getId());
+
+		category.setName(categoryEditForm.getName());
 		categoryRepository.save(category);
 	}
 }

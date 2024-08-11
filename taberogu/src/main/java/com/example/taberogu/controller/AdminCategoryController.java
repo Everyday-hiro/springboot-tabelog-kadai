@@ -59,8 +59,10 @@ public class AdminCategoryController {
 	}
 
 	@PostMapping("/create")
-	public String create(@ModelAttribute @Validated CategoryRegisterForm categoryRegisterForm,
-			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+	public String create(
+			@ModelAttribute @Validated CategoryRegisterForm categoryRegisterForm,
+			BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
 			return "admin/category/register";
 		}
@@ -75,5 +77,18 @@ public class AdminCategoryController {
 		CategoryEditForm categoryEditForm = new CategoryEditForm(category.getId(), category.getName());
 		model.addAttribute("categoryEditForm", categoryEditForm);
 		return "admin/category/edit";
+	}
+
+	@PostMapping("/{id}/update")
+	public String update(
+			@ModelAttribute @Validated CategoryEditForm categoryEditForm,
+			BindingResult bindingResult,
+			RedirectAttributes redirectAttributes) {
+		if (bindingResult.hasErrors()) {
+			return "admin/category/edit";
+		}
+		categoryService.update(null, categoryEditForm);
+		redirectAttributes.addFlashAttribute("successMessage", "カテゴリを編集しました。");
+		return "redirect:/admin/category";
 	}
 }
