@@ -15,4 +15,6 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
 	List<Review> findByUserAndRestaurantId(User user, Integer id);
 
+	Page<Review> findByNameLike(String keyword, Pageable pageable);
+
 }
