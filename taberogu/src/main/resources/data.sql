@@ -47,3 +47,10 @@ INSERT IGNORE INTO category (id, name) VALUES(3, "寿司");
 INSERT IGNORE INTO category (id, name) VALUES(4, "中華");
 INSERT IGNORE INTO category (id, name) VALUES(5, "丼物");
 INSERT IGNORE INTO category (id, name) VALUES(6, "和食");
+
+INSERT IGNORE INTO reservation (id, restaurant_id, user_id, checkin_date, checkout_date, number_of_people, amount) VALUES (1, 1, 2, '2023-04-01', '2023-04-02', 2, 2000);
+INSERT IGNORE INTO reservation (id, restaurant_id, user_id, checkin_date, checkout_date, number_of_people, amount) VALUES (2, 2, 2, '2023-04-01', '2023-04-02', 3, 3000);
+INSERT IGNORE INTO reservation (id, restaurant_id, user_id, checkin_date, checkout_date, number_of_people, amount) VALUES (3, 4, 2, '2023-04-01', '2023-04-02', 4, 8000);
+INSERT IGNORE INTO reservation (id, restaurant_id, user_id, checkin_date, checkout_date, number_of_people, amount) VALUES (4, 6, 2, '2023-04-01', '2023-04-02', 1, 3000);
+INSERT IGNORE INTO reservation (id, restaurant_id, user_id, checkin_date, checkout_date, number_of_people, amount) VALUES (5, 7, 2, '2023-04-01', '2023-04-02', 2, 2000);
+INSERT IGNORE INTO reservation (id, restaurant_id, user_id, checkin_date, checkout_date, number_of_people, amount) VALUES (6, 9, 2, '2023-04-01', '2023-04-02', 3, 3000);
