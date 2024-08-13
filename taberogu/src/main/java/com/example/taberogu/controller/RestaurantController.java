@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.taberogu.entity.Restaurant;
 import com.example.taberogu.entity.Review;
 import com.example.taberogu.entity.User;
+import com.example.taberogu.form.ReservationInputForm;
 import com.example.taberogu.repository.FavoriteRepository;
 import com.example.taberogu.repository.RestaurantRepository;
 import com.example.taberogu.repository.ReviewRepository;
@@ -102,6 +103,7 @@ public class RestaurantController {
 		}
 		model.addAttribute("restaurant", restaurant);
 		model.addAttribute("reviewPage", reviewPage);
+		model.addAttribute("reservationInputForm", new ReservationInputForm());
 
 		return "restaurant/show";
 	}
