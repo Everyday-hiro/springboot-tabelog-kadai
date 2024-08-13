@@ -93,14 +93,21 @@ public class RestaurantController {
 
 		Restaurant restaurant = restaurantRepository.getReferenceById(id);
 		Page<Review> reviewPage = reviewRepository.findByRestaurantId(id, pageable);
+		if (reviewPage == null) {
+			reviewPage = Page.empty();
+		}
+
+		boolean userHasReview = false;
+		boolean notFavorite = true;
 
 		if (userDetailsImpl != null) {
 			User user = userDetailsImpl.getUser();
-			List<Review> userHasReview = reviewRepository.findByUserAndRestaurantId(user, id);
-			boolean notFavorite = !favoriteRepository.favoriteJudge(restaurant, user);
-			model.addAttribute("userHasReview", !userHasReview.isEmpty());
-			model.addAttribute("notFavorite", notFavorite);
+			List<Review> userReview = reviewRepository.findByUserAndRestaurantId(user, id);
+			notFavorite = !favoriteRepository.favoriteJudge(restaurant, user);
+			userHasReview = !userReview.isEmpty();
 		}
+		model.addAttribute("userHasReview", userHasReview);
+		model.addAttribute("notFavorite", notFavorite);
 		model.addAttribute("restaurant", restaurant);
 		model.addAttribute("reviewPage", reviewPage);
 		model.addAttribute("reservationInputForm", new ReservationInputForm());

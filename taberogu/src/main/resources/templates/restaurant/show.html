@@ -49,6 +49,10 @@
 								<div class="col-8">
 									<h1 class="mb-4" th:text="${restaurant.getName()}"></h1>
 
+									<div th:if="${errorMessage}" class="alert alert-danger">
+										<span th:text="${errorMessage}"></span>
+									</div>
+
 									<div class="mb-4">
 										<img th:if="${restaurant.getImage()}"
 											th:src="@{/storage/__${restaurant.getImage()}__}" class="w-100" alt="店舗画像">
@@ -148,8 +152,9 @@
 									<div>
 										<a class="btn text-white shadow-sm samuraitabelog-btn text-right"
 											th:href="@{/review/register/__${restaurant.getId()}__}"
-											sec:authorize="hasRole('ROLE_PAID')" th:if="${!userHasReview}">レビューを投稿する</a>
-										<div class="my-4 text-center" th:if="${reviewPage.isEmpty()}">
+											sec:authorize="hasRole('ROLE_PAID')"
+											th:if="${userHasReview != null ? !userHasReview : true}">レビューを投稿する</a>
+										<div class="my-4 text-center" th:if="${reviewPage != null and reviewPage.isEmpty()}">
 											レビューがまだ投稿されていません
 										</div>
 
@@ -219,7 +224,7 @@
 											</div>
 										</div>
 									</div>
-									<div class="text-center" th:if="${reviewPage.getTotalElements() > 2}">
+									<div class="text-center" th:if="${reviewPage != null and reviewPage.getTotalElements() > 2}">
 										<a th:href="@{/review/__${restaurant.getId()}__}">すべてのレビューを見る</a>
 									</div>
 								</div>
