@@ -1,6 +1,6 @@
 package com.example.taberogu.controller;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -76,7 +76,7 @@ public class ReservationController {
 		Restaurant restaurant = restaurantRepository.getReferenceById(id);
 		User user = userDetailsImpl.getUser();
 
-		LocalDate checkinDate = reservationInputForm.getCheckinDate();
+		LocalDateTime checkinDate = reservationInputForm.getCheckinDate();
 		Integer numberOfPeople = reservationInputForm.getNumberOfPeople();
 		Integer price = restaurant.getPrice();
 

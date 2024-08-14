@@ -1,6 +1,5 @@
 package com.example.taberogu.form;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -18,7 +17,7 @@ public class ReservationInputForm {
 	@Min(value = 1, message = "予約人数は一人以上に設定してください。")
 	private Integer numberOfPeople;
 
-	public LocalDate getCheckinDate() {
+	public LocalDateTime getCheckinDate() {
 		if (fromCheckinDateToCheckoutDate == null || fromCheckinDateToCheckoutDate.isEmpty()) {
 			return null;
 		}
@@ -28,6 +27,6 @@ public class ReservationInputForm {
 				DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
 		// 日付のみを返す
-		return dateTime.toLocalDate();
+		return dateTime;
 	}
 }

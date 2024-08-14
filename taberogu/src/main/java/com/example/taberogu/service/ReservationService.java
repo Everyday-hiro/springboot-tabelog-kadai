@@ -1,6 +1,7 @@
 package com.example.taberogu.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +43,7 @@ public class ReservationService {
 		reservationRepository.save(reservation);
 	}
 
-	public Integer calculateAmount(LocalDate checkinDate, Integer price, Integer numberOfPeople) {
+	public Integer calculateAmount(LocalDateTime checkinDate, Integer price, Integer numberOfPeople) {
 		return price * numberOfPeople;
 	}
 }
