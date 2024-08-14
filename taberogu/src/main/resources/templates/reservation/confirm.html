@@ -34,14 +34,13 @@
 							<input type="hidden" th:field="*{restaurantId}">
 							<input type="hidden" th:field="*{userId}">
 							<input type="hidden" th:field="*{checkinDate}">
-							<input type="hidden" th:field="*{checkoutDate}">
 							<input type="hidden" th:field="*{numberOfPeople}">
 							<input type="hidden" th:field="*{amount}">
 
 							<div class="container mb-4">
 								<div class="row pb-2 mb-2 border-bottom">
 									<div class="col-6">
-										<span class="fw-bold">チェックイン日</span>
+										<span class="fw-bold">チェックイン日時</span>
 									</div>
 
 									<div class="col">
@@ -53,19 +52,7 @@
 							<div class="container mb-4">
 								<div class="row pb-2 mb-2 border-bottom">
 									<div class="col-6">
-										<span class="fw-bold">チェックアウト日</span>
-									</div>
-
-									<div class="col">
-										<span th:text="*{checkoutDate}"></span>
-									</div>
-								</div>
-							</div>
-
-							<div class="container mb-4">
-								<div class="row pb-2 mb-2 border-bottom">
-									<div class="col-6">
-										<span class="fw-bold">宿泊人数</span>
+										<span class="fw-bold">予約人数</span>
 									</div>
 
 									<div class="col">
@@ -77,7 +64,7 @@
 							<div class="container mb-4">
 								<div class="row pb-2 mb-2 border-bottom">
 									<div class="col-6">
-										<span class="fw-bold">宿泊料金</span>
+										<span class="fw-bold">合計料金</span>
 									</div>
 
 									<div class="col">
