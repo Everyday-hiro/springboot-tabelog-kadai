@@ -1,6 +1,8 @@
 package com.example.taberogu.form;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -9,20 +11,23 @@ import lombok.Data;
 
 @Data
 public class ReservationInputForm {
-	@NotBlank(message = "チェックイン日とチェックアウト日を選択してください。")
+	@NotBlank(message = "チェックイン日時を選択してください。")
 	private String fromCheckinDateToCheckoutDate;
 
-	@NotNull(message = "宿泊人数を入力してください。")
-	@Min(value = 1, message = "宿泊人数は一人以上に設定してください。")
+	@NotNull(message = "予約人数を入力してください。")
+	@Min(value = 1, message = "予約人数は一人以上に設定してください。")
 	private Integer numberOfPeople;
 
 	public LocalDate getCheckinDate() {
-		String[] checkinDateAndCheckoutDate = getFromCheckinDateToCheckoutDate().split(" から ");
-		return LocalDate.parse(checkinDateAndCheckoutDate[0]);
-	}
+		if (fromCheckinDateToCheckoutDate == null || fromCheckinDateToCheckoutDate.isEmpty()) {
+			return null;
+		}
 
-	public LocalDate getCheckoutDate() {
-		String[] checkinDateAndCheckoutDate = getFromCheckinDateToCheckoutDate().split(" から ");
-		return LocalDate.parse(checkinDateAndCheckoutDate[1]);
+		// LocalDateTimeとしてパース
+		LocalDateTime dateTime = LocalDateTime.parse(fromCheckinDateToCheckoutDate,
+				DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+
+		// 日付のみを返す
+		return dateTime.toLocalDate();
 	}
 }

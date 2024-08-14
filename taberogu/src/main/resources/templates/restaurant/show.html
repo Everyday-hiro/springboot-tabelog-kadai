@@ -246,7 +246,7 @@
 													th:object="${reservationInputForm}">
 													<div class="form-group mb-2">
 														<label for="fromCheckinDateToCheckoutDate"
-															class="col-from-label text-md-left fw-bold">チェックイン・チェックアウト</label>
+															class="col-from-label text-md-left fw-bold">チェックイン日時</label>
 														<div th:if="${#fields.hasErrors('fromCheckinDateToCheckoutDate')}"
 															class="text-danger small mb-2"
 															th:errors="*{fromCheckinDateToCheckoutDate}"></div>
@@ -256,7 +256,7 @@
 
 													<div class="form-group mb-4">
 														<label for="numberOfPeople"
-															class="col-form-label text-md-left fw-bold">宿泊人数</label>
+															class="col-form-label text-md-left fw-bold">予約人数</label>
 														<div th:if="${#fields.hasErrors('numberOfPeople')}"
 															class="text-danger small mb-2"
 															th:errors="*{numberOfPeople}">

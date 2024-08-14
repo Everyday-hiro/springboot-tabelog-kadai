@@ -48,9 +48,9 @@ INSERT IGNORE INTO category (id, name) VALUES(4, "中華");
 INSERT IGNORE INTO category (id, name) VALUES(5, "丼物");
 INSERT IGNORE INTO category (id, name) VALUES(6, "和食");
 
-INSERT IGNORE INTO reservation (id, restaurant_id, user_id, checkin_date, checkout_date, number_of_people, amount) VALUES (1, 1, 2, '2023-04-01', '2023-04-02', 2, 2000);
-INSERT IGNORE INTO reservation (id, restaurant_id, user_id, checkin_date, checkout_date, number_of_people, amount) VALUES (2, 2, 2, '2023-04-01', '2023-04-02', 3, 3000);
-INSERT IGNORE INTO reservation (id, restaurant_id, user_id, checkin_date, checkout_date, number_of_people, amount) VALUES (3, 4, 2, '2023-04-01', '2023-04-02', 4, 8000);
-INSERT IGNORE INTO reservation (id, restaurant_id, user_id, checkin_date, checkout_date, number_of_people, amount) VALUES (4, 6, 2, '2023-04-01', '2023-04-02', 1, 3000);
-INSERT IGNORE INTO reservation (id, restaurant_id, user_id, checkin_date, checkout_date, number_of_people, amount) VALUES (5, 7, 2, '2023-04-01', '2023-04-02', 2, 2000);
-INSERT IGNORE INTO reservation (id, restaurant_id, user_id, checkin_date, checkout_date, number_of_people, amount) VALUES (6, 9, 2, '2023-04-01', '2023-04-02', 3, 3000);
+INSERT IGNORE INTO reservation (id, restaurant_id, user_id, checkin_date, number_of_people, amount) VALUES (1, 1, 2, '2023-04-01　13:00', 2, 2000);
+INSERT IGNORE INTO reservation (id, restaurant_id, user_id, checkin_date, number_of_people, amount) VALUES (2, 2, 2, '2023-04-01 17:30', 3, 3000);
+INSERT IGNORE INTO reservation (id, restaurant_id, user_id, checkin_date, number_of_people, amount) VALUES (3, 4, 2, '2023-04-01 18:00', 4, 8000);
+INSERT IGNORE INTO reservation (id, restaurant_id, user_id, checkin_date, number_of_people, amount) VALUES (4, 6, 2, '2023-04-01 20:00', 1, 3000);
+INSERT IGNORE INTO reservation (id, restaurant_id, user_id, checkin_date, number_of_people, amount) VALUES (5, 7, 2, '2023-04-01 15:00', 2, 2000);
+INSERT IGNORE INTO reservation (id, restaurant_id, user_id, checkin_date, number_of_people, amount) VALUES (6, 9, 2, '2023-04-01 16:00', 3, 3000);

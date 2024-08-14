@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.taberogu.entity.Reservation;
@@ -76,15 +77,21 @@ public class ReservationController {
 		User user = userDetailsImpl.getUser();
 
 		LocalDate checkinDate = reservationInputForm.getCheckinDate();
-		LocalDate checkoutDate = reservationInputForm.getCheckoutDate();
-
+		Integer numberOfPeople = reservationInputForm.getNumberOfPeople();
 		Integer price = restaurant.getPrice();
-		Integer amount = reservationService.calculateAmount(checkinDate, checkoutDate, price);
+
+		Integer amount = reservationService.calculateAmount(checkinDate, price, numberOfPeople);
 
 		ReservationRegisterForm reservationRegisterForm = new ReservationRegisterForm(restaurant.getId(), user.getId(),
-				checkinDate.toString(), checkoutDate.toString(), reservationInputForm.getNumberOfPeople(), amount);
+				checkinDate.toString(), reservationInputForm.getNumberOfPeople(), amount);
 		model.addAttribute("restaurant", restaurant);
 		model.addAttribute("reservationRegisterForm", reservationRegisterForm);
 		return "reservation/confirm";
+	}
+
+	@PostMapping("/restaurant/{id}/reservation/create")
+	public String create(@ModelAttribute ReservationRegisterForm reservationRegisterForm) {
+		reservationService.create(reservationRegisterForm);
+		return "redirect:/reservation?reserved";
 	}
 }
