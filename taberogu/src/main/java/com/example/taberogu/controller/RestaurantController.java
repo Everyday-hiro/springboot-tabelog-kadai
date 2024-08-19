@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.taberogu.entity.Category;
 import com.example.taberogu.entity.Restaurant;
 import com.example.taberogu.entity.Review;
 import com.example.taberogu.entity.User;
 import com.example.taberogu.form.ReservationInputForm;
+import com.example.taberogu.repository.CategoryRepository;
 import com.example.taberogu.repository.FavoriteRepository;
 import com.example.taberogu.repository.RestaurantRepository;
 import com.example.taberogu.repository.ReviewRepository;
@@ -30,12 +32,15 @@ public class RestaurantController {
 	private final RestaurantRepository restaurantRepository;
 	private final ReviewRepository reviewRepository;
 	private final FavoriteRepository favoriteRepository;
+	private final CategoryRepository categoryRepository;
 
 	public RestaurantController(RestaurantRepository restaurantRepository, ReviewRepository reviewRepository,
-			FavoriteRepository favoriteRepository) {
+			FavoriteRepository favoriteRepository, CategoryRepository categoryRepository) {
 		this.restaurantRepository = restaurantRepository;
 		this.reviewRepository = reviewRepository;
 		this.favoriteRepository = favoriteRepository;
+		this.categoryRepository = categoryRepository;
+
 	}
 
 	@GetMapping
@@ -113,5 +118,25 @@ public class RestaurantController {
 		model.addAttribute("reservationInputForm", new ReservationInputForm());
 
 		return "restaurant/show";
+	}
+
+	@GetMapping("/category/{id}")
+	public String category(@PathVariable("id") Integer id,
+			@RequestParam(value = "keyword", required = false) String keyword,
+			@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable,
+			Model model) {
+
+		Category category = categoryRepository.getReferenceById(id);
+		Page<Restaurant> restaurantPage;
+		if (keyword != null && !keyword.isEmpty()) {
+			restaurantPage = restaurantRepository.findByCategoryIdAndNameLike(id, "%" + keyword + "%", pageable);
+		} else {
+			restaurantPage = restaurantRepository.findByCategoryId(id, pageable);
+		}
+		model.addAttribute("category", category);
+		model.addAttribute("restaurantPage", restaurantPage);
+		model.addAttribute("keyword", keyword);
+
+		return "restaurant/category";
 	}
 }

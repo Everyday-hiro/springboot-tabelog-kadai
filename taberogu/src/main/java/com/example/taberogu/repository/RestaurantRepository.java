@@ -31,4 +31,9 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
 	public Page<Restaurant> findAllByOrderByPriceAsc(Pageable pageable);
 
 	public Page<Restaurant> findByNameLike(String keyword, Pageable pageable);
+
+	public Page<Restaurant> findByCategoryIdAndNameLike(Integer id, String string, Pageable pageable);
+
+	public Page<Restaurant> findByCategoryId(Integer id, Pageable pageable);
+
 }

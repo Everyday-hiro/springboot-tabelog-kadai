@@ -2,6 +2,8 @@ package com.example.taberogu.form;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.taberogu.entity.Category;
+
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,7 +17,7 @@ public class RestaurantRegisterForm {
 	private MultipartFile imageFile;
 
 	@NotBlank(message = "カテゴリを入力してください。")
-	private String category;
+	private Category category;
 
 	@NotBlank(message = "説明を入力してください。")
 	private String restaurantDescription;
