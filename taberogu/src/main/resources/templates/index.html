@@ -50,12 +50,11 @@
 						<div class="card mb-3">
 							<h2 class="card-header text-center mb-3">カテゴリ</h2>
 							<div class="card-body">
-								<a th:href="@{/restaurant?category=カフェ}" class="d-block">カフェ</a>
-								<a th:href="@{/restaurant?category=焼肉}" class="d-block">焼肉</a>
-								<a th:href="@{/restaurant?category=寿司}" class="d-block">寿司</a>
-								<a th:href="@{/restaurant?category=中華}" class="d-block">中華</a>
-								<a th:href="@{/restaurant?category=丼物}" class="d-block">丼物</a>
-								<a th:href="@{/restaurant?category=和食}" class="d-block">和食</a>
+								<ul>
+									<li th:each="category : ${category}">
+										<a th:href="@{/restaurant/category/{id}(id=${category.getId()})}" th:text="${category.getName()}"></a>
+									</li>
+								</ul>
 							</div>
 						</div>
 
