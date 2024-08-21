@@ -48,7 +48,7 @@ public class ReservationService {
 		reservationRepository.save(reservation);
 	}
 
-	public Integer calculateAmount(LocalDateTime checkinDate, Integer price, Integer numberOfPeople) {
+	public Integer calculateAmount(Integer price, Integer numberOfPeople) {
 		return price * numberOfPeople;
 	}
 }

@@ -92,7 +92,7 @@
 			<version>26.0.0</version>
 		</dependency>
 	</dependencies>
-
+	
 	<build>
 		<plugins>
 			<plugin>

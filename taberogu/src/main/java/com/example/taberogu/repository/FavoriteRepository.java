@@ -14,12 +14,12 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Integer> {
 
 	Page<Favorite> findByUser(User user, Pageable pageable);
 
-	Favorite findByRestaurantAndUser(Restaurant restaurant, User user);
-
 	default boolean favoriteJudge(Restaurant restaurant, User user) {
-		return findByRestaurantAndUser(restaurant, user) != null;
+		return findByRestaurantIdAndUserId(restaurant.getId(), user.getId()) != null;
 	}
 
 	List<Favorite> findTop3ByOrderByCreatedAtDesc();
+
+	Favorite findByRestaurantIdAndUserId(Integer restaurantId, Integer userId);
 
 }

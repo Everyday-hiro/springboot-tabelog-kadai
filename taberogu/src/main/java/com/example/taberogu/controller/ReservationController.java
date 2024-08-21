@@ -1,7 +1,5 @@
 package com.example.taberogu.controller;
 
-import java.time.LocalDateTime;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -81,14 +79,14 @@ public class ReservationController {
 		Restaurant restaurant = restaurantRepository.getReferenceById(id);
 		User user = userDetailsImpl.getUser();
 
-		LocalDateTime checkinDate = reservationInputForm.getCheckinDate();
+		String checkinDate = reservationInputForm.getFromCheckinDateToCheckoutDate();
 		Integer numberOfPeople = reservationInputForm.getNumberOfPeople();
 		Integer price = restaurant.getPrice();
 
-		Integer amount = reservationService.calculateAmount(checkinDate, price, numberOfPeople);
+		Integer amount = reservationService.calculateAmount(price, numberOfPeople);
 
 		ReservationRegisterForm reservationRegisterForm = new ReservationRegisterForm(restaurant.getId(), user.getId(),
-				checkinDate.toString(), reservationInputForm.getNumberOfPeople(), amount);
+				checkinDate, reservationInputForm.getNumberOfPeople(), amount);
 
 		String sessionId = stripeService.createStripeSession(restaurant.getName(), reservationRegisterForm,
 				httpServletRequest);

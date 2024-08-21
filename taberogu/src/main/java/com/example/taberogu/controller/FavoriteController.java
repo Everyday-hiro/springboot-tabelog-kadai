@@ -70,7 +70,7 @@ public class FavoriteController {
 			redirectAttributes.addFlashAttribute("successMessage", "お気に入りに追加しました。");
 			return "redirect:/restaurant/" + restaurantId;
 		} else {
-			redirectAttributes.addFlashAttribute("errorMessage", "指定されたレストランが見つかりませんでした。");
+			redirectAttributes.addFlashAttribute("errorMessage", "指定された店舗が見つかりませんでした。");
 			return "redirect:/restaurant/";
 		}
 	}
