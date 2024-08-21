@@ -1,7 +1,7 @@
 package com.example.taberogu.service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.taberogu.entity.Reservation;
 import com.example.taberogu.entity.Restaurant;
 import com.example.taberogu.entity.User;
-import com.example.taberogu.form.ReservationRegisterForm;
 import com.example.taberogu.repository.ReservationRepository;
 import com.example.taberogu.repository.RestaurantRepository;
 import com.example.taberogu.repository.UserRepository;
@@ -28,17 +27,23 @@ public class ReservationService {
 	}
 
 	@Transactional
-	public void create(ReservationRegisterForm reservationRegisterForm) {
+	public void create(Map<String, String> paymentIntentObject) {
 		Reservation reservation = new Reservation();
-		Restaurant restaurant = restaurantRepository.getReferenceById(reservationRegisterForm.getRestaurantId());
-		User user = userRepository.getReferenceById(reservationRegisterForm.getUserId());
-		LocalDate checkinDate = LocalDate.parse(reservationRegisterForm.getCheckinDate());
+
+		Integer restaurantId = Integer.valueOf(paymentIntentObject.get("restaurantId"));
+		Integer userId = Integer.valueOf(paymentIntentObject.get("userId"));
+
+		Restaurant restaurant = restaurantRepository.getReferenceById(restaurantId);
+		User user = userRepository.getReferenceById(userId);
+		LocalDateTime checkinDate = LocalDateTime.parse(paymentIntentObject.get("checkinDate"));
+		Integer numberOfPeople = Integer.valueOf(paymentIntentObject.get("numberOfPeople"));
+		Integer amount = Integer.valueOf(paymentIntentObject.get("amount"));
 
 		reservation.setRestaurant(restaurant);
 		reservation.setUser(user);
 		reservation.setCheckinDate(checkinDate);
-		reservation.setNumberOfPeople(reservationRegisterForm.getNumberOfPeople());
-		reservation.setAmount(reservationRegisterForm.getAmount());
+		reservation.setNumberOfPeople(numberOfPeople);
+		reservation.setAmount(amount);
 
 		reservationRepository.save(reservation);
 	}

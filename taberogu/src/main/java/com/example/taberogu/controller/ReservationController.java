@@ -14,7 +14,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.taberogu.entity.Reservation;
@@ -26,18 +25,23 @@ import com.example.taberogu.repository.ReservationRepository;
 import com.example.taberogu.repository.RestaurantRepository;
 import com.example.taberogu.security.UserDetailsImpl;
 import com.example.taberogu.service.ReservationService;
+import com.example.taberogu.service.StripeService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class ReservationController {
 	private final ReservationRepository reservationRepository;
 	private final RestaurantRepository restaurantRepository;
 	private final ReservationService reservationService;
+	private final StripeService stripeService;
 
 	public ReservationController(ReservationRepository reservationRepository, RestaurantRepository restaurantRepository,
-			ReservationService reservationService) {
+			ReservationService reservationService, StripeService stripeService) {
 		this.reservationRepository = reservationRepository;
 		this.restaurantRepository = restaurantRepository;
 		this.reservationService = reservationService;
+		this.stripeService = stripeService;
 	}
 
 	@GetMapping("/reservation")
@@ -72,6 +76,7 @@ public class ReservationController {
 	public String confirm(@PathVariable(name = "id") Integer id,
 			@ModelAttribute ReservationInputForm reservationInputForm,
 			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+			HttpServletRequest httpServletRequest,
 			Model model) {
 		Restaurant restaurant = restaurantRepository.getReferenceById(id);
 		User user = userDetailsImpl.getUser();
@@ -84,14 +89,21 @@ public class ReservationController {
 
 		ReservationRegisterForm reservationRegisterForm = new ReservationRegisterForm(restaurant.getId(), user.getId(),
 				checkinDate.toString(), reservationInputForm.getNumberOfPeople(), amount);
+
+		String sessionId = stripeService.createStripeSession(restaurant.getName(), reservationRegisterForm,
+				httpServletRequest);
+
 		model.addAttribute("restaurant", restaurant);
 		model.addAttribute("reservationRegisterForm", reservationRegisterForm);
+		model.addAttribute("sessionId", sessionId);
 		return "reservation/confirm";
 	}
 
+	/*
 	@PostMapping("/restaurant/{id}/reservation/create")
 	public String create(@ModelAttribute ReservationRegisterForm reservationRegisterForm) {
 		reservationService.create(reservationRegisterForm);
 		return "redirect:/reservation?reserved";
 	}
+	*/
 }
