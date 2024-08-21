@@ -30,15 +30,15 @@
 						<div sec:authorize="hasRole('ROLE_PAID')">
 							<div th:if="${notFavorite}">
 								<form method="post" th:action="@{/favorite/add/__${restaurant.getId()}__}">
-									<input type="hidden" name="restaurant" th:value="*{restaurant.getId()}">
+									<input type="hidden" name="restaurant" th:value="*{restaurantId}">
 									<input type="hidden" name="user" th:value="*{user}">
 									<button type="submit">&#9734お気に入り追加</button>
 								</form>
 							</div>
 							<div th:unless="${notFavorite}">
 								<form method="post" th:action="@{/favorite/delete/__${restaurant.getId()}__}">
-									<input type="hidden" name="restaurant" th:value="*{restaurant.getId()}">
-									<input type="hidden" name="restaurant" th:value="*{user}">
+									<input type="hidden" name="restaurant" th:value="*{restaurantId}">
+									<input type="hidden" name="user" th:value="*{user}">
 									<button type="submit">&#9733お気に入り解除</button>
 								</form>
 							</div>
@@ -48,6 +48,10 @@
 							<div class="row">
 								<div class="col-8">
 									<h1 class="mb-4" th:text="${restaurant.getName()}"></h1>
+
+									<div th:if="${successMessage}" class="alert alert-info">
+										<span th:text="${successMessage}"></span>
+									</div>
 
 									<div th:if="${errorMessage}" class="alert alert-danger">
 										<span th:text="${errorMessage}"></span>
@@ -78,7 +82,7 @@
 													<span class="fw-bold">カテゴリ</span>
 												</div>
 												<div class="col">
-													<span th:text="${restaurant.getCategory()}"></span>
+													<span th:text="${restaurant.getCategory().getName()}"></span>
 												</div>
 											</div>
 
@@ -154,7 +158,8 @@
 											th:href="@{/review/register/__${restaurant.getId()}__}"
 											sec:authorize="hasRole('ROLE_PAID')"
 											th:if="${userHasReview != null ? !userHasReview : true}">レビューを投稿する</a>
-										<div class="my-4 text-center" th:if="${reviewPage != null and reviewPage.isEmpty()}">
+										<div class="my-4 text-center"
+											th:if="${reviewPage != null and reviewPage.isEmpty()}">
 											レビューがまだ投稿されていません
 										</div>
 
@@ -224,7 +229,8 @@
 											</div>
 										</div>
 									</div>
-									<div class="text-center" th:if="${reviewPage != null and reviewPage.getTotalElements() > 2}">
+									<div class="text-center"
+										th:if="${reviewPage != null and reviewPage.getTotalElements() > 2}">
 										<a th:href="@{/review/__${restaurant.getId()}__}">すべてのレビューを見る</a>
 									</div>
 								</div>

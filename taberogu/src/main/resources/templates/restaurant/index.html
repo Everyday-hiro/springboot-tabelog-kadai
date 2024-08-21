@@ -24,6 +24,10 @@
 						</ol>
 					</nav>
 
+					<div th:if="${errorMessage}" class="alert alert-danger">
+						<span th:text="${errorMessage}"></span>
+					</div>
+
 					<div class="col-xl-3 col-lg-4 col-md-12">
 						<form method="get" th:action="@{/restaurant}" class="w-100 mb-3">
 							<div class="input-group">

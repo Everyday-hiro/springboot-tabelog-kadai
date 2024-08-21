@@ -46,7 +46,7 @@ public class RestaurantController {
 	@GetMapping
 	public String index(
 			@RequestParam(name = "keyword", required = false) String keyword,
-			@RequestParam(name = "category", required = false) String category,
+			@RequestParam(name = "category", required = false) Category category,
 			@RequestParam(name = "area", required = false) String area,
 			@RequestParam(name = "order", required = false) String order,
 			@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable,

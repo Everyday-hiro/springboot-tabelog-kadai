@@ -10,10 +10,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 
 @Entity
-@Table(name = "favorite")
+@Table(name = "favorite", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "user_id", "restaurant_id" })
+})
 @Data
 public class Favorite {
 	@Id
