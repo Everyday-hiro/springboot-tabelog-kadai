@@ -159,10 +159,6 @@
 											レビューがまだ投稿されていません
 										</div>
 
-										<div th:if="${successMessage}" class="alert alert-info">
-											<span th:text="${successMessage}"></span>
-										</div>
-
 										<div th:each="review : ${reviewPage}" class="position-relative my-position">
 											<div
 												class="review-header d-flex justify-content-between align-items-center mb-0">

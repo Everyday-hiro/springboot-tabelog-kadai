@@ -1,6 +1,5 @@
 package com.example.taberogu.service;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -35,7 +34,7 @@ public class ReservationService {
 
 		Restaurant restaurant = restaurantRepository.getReferenceById(restaurantId);
 		User user = userRepository.getReferenceById(userId);
-		LocalDateTime checkinDate = LocalDateTime.parse(paymentIntentObject.get("checkinDate"));
+		String checkinDate = String.valueOf(paymentIntentObject.get("checkinDate"));
 		Integer numberOfPeople = Integer.valueOf(paymentIntentObject.get("numberOfPeople"));
 		Integer amount = Integer.valueOf(paymentIntentObject.get("amount"));
 

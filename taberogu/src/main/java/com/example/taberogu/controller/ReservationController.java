@@ -56,7 +56,8 @@ public class ReservationController {
 
 	@GetMapping("/restaurant/{id}/reservation/input")
 	public String input(@PathVariable(name = "id") Integer id,
-			@ModelAttribute @Validated ReservationInputForm reservationInputForm, BindingResult bindingResult,
+			@ModelAttribute @Validated ReservationInputForm reservationInputForm,
+			BindingResult bindingResult,
 			RedirectAttributes redirectAttributes, Model model) {
 		Restaurant restaurant = restaurantRepository.getReferenceById(id);
 

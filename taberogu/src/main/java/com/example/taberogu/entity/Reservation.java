@@ -1,7 +1,6 @@
 package com.example.taberogu.entity;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,7 +30,7 @@ public class Reservation {
 	private User user;
 
 	@Column(name = "checkin_date")
-	private LocalDateTime checkinDate;
+	private String checkinDate;
 
 	@Column(name = "number_of_people")
 	private Integer numberOfPeople;
