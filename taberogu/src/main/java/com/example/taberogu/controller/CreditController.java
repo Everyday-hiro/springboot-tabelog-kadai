@@ -87,4 +87,14 @@ public class CreditController {
 
 		return "redirect:/credit/info/{creditId}";
 	}
+
+	@PostMapping("/{creditId}/delete")
+	public String delete(@PathVariable(name = "creditId") Integer creditId,
+			RedirectAttributes redirectAttributes,
+			Model model) {
+		Credit credit = creditRepository.findById(creditId).orElseThrow(() -> new RuntimeException("Credit not found"));
+		creditRepository.delete(credit);
+		redirectAttributes.addFlashAttribute("successMessage", "クレジットカードを削除しました。");
+		return "redirect:/user";
+	}
 }

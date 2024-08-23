@@ -30,7 +30,9 @@
 						<div class="d-flex justify-content-end align-items-end mb-3">
 							<div>
 								<a th:href="@{/credit/__${credit.getId()}__/edit}">編集</a>
-								<a th:href="@{/credit/__${credit.getId()}__/delete}">削除</a>
+								<a th:href="@{/credit/__${credit.getId()}__/delete}" class="samuraitabelog-link-danger"
+									data-bs-toggle="modal"
+									th:data-bs-target="${'#deleteCreditModal' + credit.getId()}">削除</a>
 							</div>
 						</div>
 
@@ -78,7 +80,30 @@
 									<span th:text="${credit.getName()}"></span>
 								</div>
 							</div>
+						</div>
 
+						<div class="modal fade" th:id="${'deleteCreditModal' + credit.getId()}" tabindex="=-1"
+							role="dialog" aria-labelledby="${'deleteCreditModalLabel' + credit.getId()}"
+							aria-hidden="true">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" th:id="${'deleteCreditModalLabel' + credit.getId()}">
+											このクレジットカードを削除してもよろしいですか？
+										</h5>
+										<button type="button" class="btn-close" data-bs-dismiss="modal"
+											aria-label="閉じる"></button>
+									</div>
+									<div class="modal-footer">
+										<form method="post" th:action="@{/credit/__${credit.getId()}__/delete}">
+											<button type="button" class="btn btn-secondary"
+												data-bs-dismiss="modal">キャンセル</button>
+											<button type="submit"
+												class="btn samuraitabelog-btn-danger text-white shadow-sm">削除</button>
+										</form>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
