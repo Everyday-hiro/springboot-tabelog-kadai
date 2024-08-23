@@ -25,7 +25,7 @@ public class CreditService {
 		User user = userDetailsImpl.getUser();
 
 		credit.setUser(user);
-		credit.setCrediNumber(creditRegisterForm.getCreditNumber());
+		credit.setCreditNumber(creditRegisterForm.getCreditNumber());
 		credit.setGoodThru(creditRegisterForm.getGoodThru());
 		credit.setSecurityCode(creditRegisterForm.getSecurityCode());
 		credit.setName(creditRegisterForm.getName());
