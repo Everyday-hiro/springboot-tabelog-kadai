@@ -33,8 +33,8 @@ public class FavoriteService {
 	 * お気に入り解除
 	 */
 	@Transactional
-	public void delete(Restaurant restaurant, User user) {
-		Favorite favorite = favoriteRepository.findByRestaurantIdAndUserId(restaurant.getId(), user.getId());
+	public void delete(Integer restaurantId, Integer userId) {
+		Favorite favorite = favoriteRepository.findByRestaurantIdAndUserId(restaurantId, userId);
 		if (favorite != null) {
 			favoriteRepository.delete(favorite);
 		}

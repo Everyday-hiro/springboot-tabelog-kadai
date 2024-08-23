@@ -82,17 +82,11 @@ public class FavoriteController {
 	public String delete(@PathVariable(name = "restaurantId") Integer restaurantId, Model model,
 			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
 			RedirectAttributes redirectAttributes) {
-		Optional<Restaurant> restaurantOpt = restaurantRepository.findById(restaurantId);
-		if (restaurantOpt.isPresent()) {
-			Restaurant restaurant = restaurantOpt.get();
-			User user = userDetailsImpl.getUser();
+		User user = userDetailsImpl.getUser();
 
-			favoriteService.delete(restaurant, user);
-			redirectAttributes.addFlashAttribute("successMessage", "お気に入りを解除しました。");
-			return "redirect:/restaurant/" + restaurantId;
-		} else {
-			redirectAttributes.addFlashAttribute("errorMessage", "指定された店舗が見つかりませんでした。");
-			return "redirect:/restaurant/";
-		}
+		favoriteService.delete(restaurantId, user.getId());
+		redirectAttributes.addFlashAttribute("successMessage", "お気に入りを解除しました。");
+		return "redirect:/restaurant/" + restaurantId;
+
 	}
 }
