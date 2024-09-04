@@ -20,6 +20,7 @@ import com.example.taberogu.form.UserEditForm;
 import com.example.taberogu.repository.CreditRepository;
 import com.example.taberogu.repository.UserRepository;
 import com.example.taberogu.security.UserDetailsImpl;
+import com.example.taberogu.service.StripeService;
 import com.example.taberogu.service.UserService;
 
 @Controller
@@ -28,11 +29,14 @@ public class UserController {
 	private final UserRepository userRepository;
 	private final UserService userService;
 	private final CreditRepository creditRepository;
+	private final StripeService stripeService;
 
-	public UserController(UserRepository userRepository, UserService userService, CreditRepository creditRepository) {
+	public UserController(UserRepository userRepository, UserService userService, CreditRepository creditRepository,
+			StripeService stripeService) {
 		this.userRepository = userRepository;
 		this.userService = userService;
 		this.creditRepository = creditRepository;
+		this.stripeService = stripeService;
 	}
 
 	@GetMapping
@@ -77,4 +81,5 @@ public class UserController {
 		redirectAttributes.addFlashAttribute("successMessage", "会員情報を編集しました。");
 		return "redirect:/user";
 	}
+
 }

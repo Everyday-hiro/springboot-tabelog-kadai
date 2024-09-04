@@ -1,5 +1,6 @@
 package com.example.taberogu.service;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,4 +75,27 @@ public class UserService {
 		User currentUser = userRepository.getReferenceById(userEditForm.getId());
 		return !userEditForm.getEmail().equals(currentUser.getEmail());
 	}
+
+	public void save(User user) {
+		userRepository.save(user);
+	}
+
+	public User getCurrentUser() {
+		// TODO 自動生成されたメソッド・スタブ
+		return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	}
+
+	@Transactional
+	public void updateRoleToFree(User user) {
+		// IDが2のRole（ROLE_FREE）を取得
+		Role freeMemberRole = roleRepository.findById(1)
+				.orElseThrow(() -> new RuntimeException("Role not found"));
+
+		// ユーザーのロールを更新
+		user.setRole(freeMemberRole);
+
+		// ユーザーの情報をデータベースに保存
+		userRepository.save(user);
+	}
+
 }

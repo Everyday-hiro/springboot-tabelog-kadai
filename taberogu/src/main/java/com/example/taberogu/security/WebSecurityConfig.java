@@ -19,7 +19,7 @@ public class WebSecurityConfig {
 		http
 				.authorizeHttpRequests((requests) -> requests
 						.requestMatchers("/css/**", "/images/**", "/js/**", "/storage/**", "/", "/signup/**",
-								"/restaurant", "/restaurant/{id}", "/stripe/webhook")
+								"/restaurant", "/restaurant/{id}", "/stripe/webhook", "/create-checkout-session")
 						.permitAll() /**全てのユーザーにアクセス許可**/
 						.requestMatchers("/admin/**").hasRole("ADMIN")/**管理者にのみ許可**/
 						.anyRequest().authenticated())/**上のURL以外はログインが必要（会員または管理者どっちでもOK）**/
