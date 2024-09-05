@@ -16,19 +16,16 @@ import com.example.taberogu.repository.UserRepository;
 import com.example.taberogu.security.UserDetailsImpl;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
-import com.stripe.model.Customer;
-import com.stripe.model.CustomerCollection;
 import com.stripe.model.Event;
 import com.stripe.model.StripeObject;
 import com.stripe.model.Subscription;
-import com.stripe.model.SubscriptionCollection;
 import com.stripe.model.checkout.Session;
-import com.stripe.param.CustomerListParams;
-import com.stripe.param.SubscriptionListParams;
+import com.stripe.param.SubscriptionCancelParams;
 import com.stripe.param.checkout.SessionCreateParams;
 import com.stripe.param.checkout.SessionRetrieveParams;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 
 @Service
 public class StripeService {
@@ -115,7 +112,6 @@ public class StripeService {
 	public String createSubscription(User user, HttpServletRequest httpServletRequest) {
 		Stripe.apiKey = stripeApiKey;
 		String MY_DOMAIN = "http://localhost:8080";
-		String requestUrl = new String(httpServletRequest.getRequestURL());
 
 		// セッション作成
 		SessionCreateParams params = SessionCreateParams.builder()
@@ -134,6 +130,7 @@ public class StripeService {
 			Session session = Session.create(params);
 
 			if (session != null && session.getId() != null) {
+
 				Role paidMemberRole = roleRepository.findById(2)
 						.orElseThrow(() -> new RuntimeException("Role not found"));
 				user.setRole(paidMemberRole);
@@ -147,6 +144,32 @@ public class StripeService {
 		}
 	}
 
+	@Transactional
+	public void processSubscriptionCreated(String subscriptionId) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null) {
+			System.out.println("Authentication: " + authentication.getClass().getName());
+			System.out.println("Principal: " + authentication.getPrincipal());
+		} else {
+			System.err.println("Authentication is null.");
+		}
+		UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
+		User user = userDetailsImpl.getUser();
+		user.setSubscriptionId(subscriptionId);
+		userRepository.save(user);
+	}
+
+	public void cancelSubscription(String subscriptionId) throws StripeException {
+		Stripe.apiKey = stripeApiKey;
+
+		SubscriptionCancelParams params = SubscriptionCancelParams.builder()
+				.setProrate(true)
+				.build();
+
+		Subscription subscription = Subscription.retrieve(subscriptionId);
+		subscription.cancel(params);
+	}
+
 	public void processReservationPayment(Event event) {
 		// TODO 自動生成されたメソッド・スタブ
 	}
@@ -156,69 +179,8 @@ public class StripeService {
 		return null;
 	}
 
-	public void cancelSubscription(String email) throws StripeException {
-		Stripe.apiKey = stripeApiKey;
-
-		// email から customerId を取得
-		String customerId = findCustomerIdByEmail(email);
-
-		if (customerId == null) {
-			throw new RuntimeException("Customer with email " + email + " not found.");
-		}
-
-		// サブスクリプションのリストを取得
-		SubscriptionListParams params = SubscriptionListParams.builder()
-				.setCustomer(customerId)
-				.build();
-
-		SubscriptionCollection subscriptions = Subscription.list(params);
-
-		if (subscriptions.getData().isEmpty()) {
-			throw new RuntimeException("No subscriptions found for customer.");
-		}
-
-		// 最初のサブスクリプションを取得し解約
-		String subscriptionId = subscriptions.getData().get(0).getId();
-		Subscription subscription = Subscription.retrieve(subscriptionId);
-		subscription.cancel();
-
-		// 認証情報からユーザーを取得
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-		User user = userDetails.getUser();
-
-		if (user != null) {
-			// RoleRepositoryを使用してROLE_FREEのRoleを取得
-			Role roleFree = roleRepository.findByName("ROLE_FREE");
-			if (roleFree != null) {
-				user.setRole(roleFree); // Roleエンティティをセット
-				userRepository.save(user); // 変更をデータベースに保存
-			} else {
-				throw new RuntimeException("ROLE_FREE role not found.");
-			}
-		}
-	}
-
-	private String findCustomerIdByEmail(String email) throws StripeException {
-		if (email == null || email.isEmpty()) {
-			throw new IllegalArgumentException("Email cannot be null or empty");
-		}
-
-		Stripe.apiKey = "your-stripe-api-key";
-
-		// 顧客のリストを取得
-		CustomerListParams params = CustomerListParams.builder()
-				.setLimit((long) 100) // 必要に応じて取得件数を調整
-				.build();
-
-		CustomerCollection customers = Customer.list(params);
-
-		for (Customer customer : customers.getData()) {
-			// email が一致するか確認
-			if (email.equals(customer.getEmail())) {
-				return customer.getId(); // customerId を返す
-			}
-		}
-		return null; // 該当する顧客が見つからない場合
+	public Subscription getSubscriptionByCustomerId(String customerId) {
+		// TODO 自動生成されたメソッド・スタブ
+		return null;
 	}
 }

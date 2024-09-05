@@ -12,12 +12,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.taberogu.entity.User;
+import com.example.taberogu.repository.UserRepository;
 import com.example.taberogu.security.UserDetailsImpl;
 import com.example.taberogu.service.StripeService;
-import com.example.taberogu.service.UserService;
 import com.stripe.Stripe;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
+import com.stripe.model.Subscription;
 import com.stripe.net.Webhook;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +26,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Controller
 public class StripeWebhookController {
 	private final StripeService stripeService;
-	private final UserService userService;
+	private final UserRepository userRepository;
 
 	@Value("${stripe.api-key}")
 	private String stripeApiKey;
@@ -33,14 +34,14 @@ public class StripeWebhookController {
 	@Value("${stripe.webhook-secret}")
 	private String webhookSecret;
 
-	public StripeWebhookController(StripeService stripeService, UserService userService) {
+	public StripeWebhookController(StripeService stripeService, UserRepository userRepository) {
 		this.stripeService = stripeService;
-		this.userService = userService;
+		this.userRepository = userRepository;
 	}
 
 	@PostMapping("/stripe/webhook")
 	public ResponseEntity<String> webhook(@RequestBody String payload,
-			@RequestHeader("Stripe-Signature") String sigHeader) {
+			@RequestHeader("Stripe-Signature") String sigHeader, Integer userId) {
 		Stripe.apiKey = stripeApiKey;
 		Event event = null;
 
@@ -54,7 +55,16 @@ public class StripeWebhookController {
 			stripeService.processSessionCompleted(event);
 		}
 
+		if ("customer.subscription.created".equals(event.getType())) {
+			Subscription subscription = (Subscription) event.getData().getObject();
+			String subscriptionId = subscription.getId();
+
+			// サブスクリプションIDのみを処理する
+			stripeService.processSubscriptionCreated(subscriptionId);
+		}
+
 		return new ResponseEntity<>("Success", HttpStatus.OK);
+
 	}
 
 	@PostMapping("/create-checkout-session")

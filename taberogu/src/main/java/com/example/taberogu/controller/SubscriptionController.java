@@ -1,6 +1,5 @@
 package com.example.taberogu.controller;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,7 +8,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.taberogu.entity.Role;
 import com.example.taberogu.entity.User;
+import com.example.taberogu.repository.RoleRepository;
+import com.example.taberogu.repository.UserRepository;
 import com.example.taberogu.security.UserDetailsImpl;
 import com.example.taberogu.service.StripeService;
 import com.stripe.exception.StripeException;
@@ -19,9 +21,14 @@ import jakarta.servlet.http.HttpServletRequest;
 @Controller
 public class SubscriptionController {
 	private final StripeService stripeService;
+	private final UserRepository userRepository;
+	private final RoleRepository roleRepository;
 
-	public SubscriptionController(StripeService stripeService) {
+	public SubscriptionController(StripeService stripeService, UserRepository userRepository,
+			RoleRepository roleRepository) {
 		this.stripeService = stripeService;
+		this.userRepository = userRepository;
+		this.roleRepository = roleRepository;
 	}
 
 	@GetMapping("/subsc")
@@ -58,21 +65,31 @@ public class SubscriptionController {
 	}
 
 	@PostMapping("/cancel-subscription")
-	public String cancelSubscription(Authentication authentication) {
-		// 認証情報からcustomerIdを取得する仮定
-		String customerId = getCustomerIdFromAuth(authentication);
+	public String cancelSubscription(@AuthenticationPrincipal User user, RedirectAttributes redirectAttributes) {
 		try {
-			stripeService.cancelSubscription(customerId);
-			return "Subscription canceled successfully.";
-		} catch (StripeException e) {
-			return "Failed to cancel subscription: " + e.getMessage();
-		}
-	}
+			// 現在のユーザーからサブスクリプションIDを取得
+			String subscriptionId = user.getSubscriptionId();
 
-	private String getCustomerIdFromAuth(Authentication authentication) {
-		// ここで認証情報からcustomerIdを取得するロジックを配置
-		// 例: UserDetailsのカスタム実装から取得
-		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-		return userDetails.getCustomerId(); // 仮のメソッド、実装に応じて変更する必要あり
+			if (subscriptionId != null) {
+				// Stripeでサブスクリプションをキャンセル
+				stripeService.cancelSubscription(subscriptionId);
+
+				// ユーザーのサブスクリプションIDをクリア
+				user.setSubscriptionId(null);
+				Role freeRole = roleRepository.findById(1)
+						.orElseThrow(() -> new RuntimeException("Role not found"));
+				user.setRole(freeRole);
+				userRepository.save(user);
+
+				redirectAttributes.addFlashAttribute("message", "サブスクリプションがキャンセルされました。");
+			} else {
+				redirectAttributes.addFlashAttribute("error", "サブスクリプションIDが見つかりません。");
+			}
+		} catch (StripeException e) {
+			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("error", "サブスクリプションのキャンセル中にエラーが発生しました。");
+		}
+
+		return "redirect:/user/profile"; // キャンセル後のリダイレクト先
 	}
 }
