@@ -52,7 +52,8 @@
 							<div class="card-body">
 								<ul>
 									<li th:each="category : ${category}">
-										<a th:href="@{/restaurant/category/{id}(id=${category.getId()})}" th:text="${category.getName()}"></a>
+										<a th:href="@{/restaurant/category/{id}(id=${category.getId()})}"
+											th:text="${category.getName()}"></a>
 									</li>
 								</ul>
 							</div>
@@ -93,7 +94,7 @@
 						</div>
 
 						<!-- お気に入り店舗 -->
-						<div class="row mb-5">
+						<div class="row mb-5" sec:authorize="hasRole('ROLE_PAID')">
 							<h2 class="col-7 text-center mb-3">お気に入り店舗</h2>
 							<a class="col-5 boder-bottom" th:href="@{/favorite/}">お気に入り店舗一覧へ</a>
 							<div class="row row-cols-lg-3 row-cols-1 g-3 mb-5">
@@ -122,6 +123,10 @@
 										</div>
 									</a>
 								</div>
+							</div>
+
+							<div th:if="${newFavorite.size() == 0}">
+								<p class="text-center">お気に入りの店舗はありません。</p>
 							</div>
 						</div>
 					</div>
