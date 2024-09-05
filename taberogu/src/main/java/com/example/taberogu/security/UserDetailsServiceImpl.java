@@ -26,10 +26,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		try {
 			User user = userRepository.findByEmail(email);
 			String userRoleName = user.getRole().getName();
-			String customerId = null;
 			Collection<GrantedAuthority> authorities = new ArrayList<>();
 			authorities.add(new SimpleGrantedAuthority(userRoleName));
-			return new UserDetailsImpl(user, authorities, customerId);
+			return new UserDetailsImpl(user, authorities);
 		} catch (Exception e) {
 			throw new UsernameNotFoundException("ユーザーが見つかりませんでした。");
 		}

@@ -11,12 +11,9 @@ public class UserDetailsImpl implements UserDetails {
 	private final User user;
 	private final Collection<GrantedAuthority> authorities;
 
-	private final String customerId;
-
-	public UserDetailsImpl(User user, Collection<GrantedAuthority> authorities, String customerId) {
+	public UserDetailsImpl(User user, Collection<GrantedAuthority> authorities) {
 		this.user = user;
 		this.authorities = authorities;
-		this.customerId = customerId;
 	}
 
 	public User getUser() {
@@ -33,10 +30,6 @@ public class UserDetailsImpl implements UserDetails {
 	@Override
 	public String getUsername() {
 		return user.getEmail();
-	}
-
-	public String getCustomerId() {
-		return customerId;
 	}
 
 	// ロールのコレクションを返す
@@ -67,5 +60,10 @@ public class UserDetailsImpl implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return user.getEnabled();
+	}
+
+	public String getSubscriptionId() {
+		// TODO 自動生成されたメソッド・スタブ
+		return null;
 	}
 }
