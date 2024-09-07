@@ -18,16 +18,19 @@ import com.example.taberogu.form.CreditRegisterForm;
 import com.example.taberogu.repository.CreditRepository;
 import com.example.taberogu.security.UserDetailsImpl;
 import com.example.taberogu.service.CreditService;
+import com.example.taberogu.service.UserService;
 
 @Controller
 @RequestMapping("/credit")
 public class CreditController {
 	private final CreditService creditService;
 	private final CreditRepository creditRepository;
+	private final UserService userService;
 
-	public CreditController(CreditService creditService, CreditRepository creditRepository) {
+	public CreditController(CreditService creditService, CreditRepository creditRepository, UserService userService) {
 		this.creditService = creditService;
 		this.creditRepository = creditRepository;
+		this.userService = userService;
 	}
 
 	@GetMapping("/info/{creditId}")

@@ -1,7 +1,9 @@
 package com.example.taberogu.controller;
 
+import java.util.Collections;
 import java.util.List;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,7 @@ import com.example.taberogu.entity.Restaurant;
 import com.example.taberogu.repository.CategoryRepository;
 import com.example.taberogu.repository.FavoriteRepository;
 import com.example.taberogu.repository.RestaurantRepository;
+import com.example.taberogu.security.UserDetailsImpl;
 
 @Controller
 public class TopPageController {
@@ -27,11 +30,21 @@ public class TopPageController {
 	}
 
 	@GetMapping("/")
-	public String index(Model model) {
+	public String index(Model model, @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
 		List<Restaurant> newRestaurant = restaurantRepository.findTop3ByOrderByCreatedAtDesc();
-		List<Favorite> newFavorite = favoriteRepository.findTop3ByOrderByCreatedAtDesc();
+		// ログインしている場合のみお気に入りを取得
+		if (userDetailsImpl != null) {
+			int user = userDetailsImpl.getUser().getId(); // UserDetailsImpl から User オブジェクトを取得し、user_id を取り出す
+
+			// user_id に基づいてお気に入りを取得
+			List<Favorite> newFavorite = favoriteRepository.findTop3ByUserIdOrderByCreatedAtDesc(user);
+			model.addAttribute("newFavorite", newFavorite);
+		} else {
+			// ログインしていない場合は、お気に入りを表示しない
+			model.addAttribute("newFavorite", Collections.emptyList());
+		}
 		List<Category> category = categoryRepository.findAll();
-		model.addAttribute("newFavorite", newFavorite);
+
 		model.addAttribute("newRestaurant", newRestaurant);
 		model.addAttribute("category", category);
 		return "index";

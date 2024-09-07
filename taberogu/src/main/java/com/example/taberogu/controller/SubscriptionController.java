@@ -1,6 +1,5 @@
 package com.example.taberogu.controller;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,18 +9,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.taberogu.entity.User;
+import com.example.taberogu.repository.RoleRepository;
+import com.example.taberogu.repository.UserRepository;
 import com.example.taberogu.security.UserDetailsImpl;
 import com.example.taberogu.service.StripeService;
-import com.stripe.exception.StripeException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class SubscriptionController {
 	private final StripeService stripeService;
+	private final UserRepository userRepository;
+	private final RoleRepository roleRepository;
 
-	public SubscriptionController(StripeService stripeService) {
+	public SubscriptionController(StripeService stripeService, UserRepository userRepository,
+			RoleRepository roleRepository) {
 		this.stripeService = stripeService;
+		this.userRepository = userRepository;
+		this.roleRepository = roleRepository;
 	}
 
 	@GetMapping("/subsc")
@@ -41,7 +46,7 @@ public class SubscriptionController {
 	@GetMapping("/user/success")
 	public String success(@RequestParam("session_id") String sessionId, RedirectAttributes redirectAttributes) {
 		// 成功した場合の処理
-		redirectAttributes.addFlashAttribute("successMessage", "サブスクリプション支払いが成功しました。");
+		redirectAttributes.addFlashAttribute("successMessage", "サブスクリプション支払いが成功しました。画面を更新するには一度ログアウトし、再度ログインをお願いします。");
 		return "redirect:/user"; // 成功メッセージページにリダイレクト
 	}
 
@@ -58,21 +63,26 @@ public class SubscriptionController {
 	}
 
 	@PostMapping("/cancel-subscription")
-	public String cancelSubscription(Authentication authentication) {
-		// 認証情報からcustomerIdを取得する仮定
-		String customerId = getCustomerIdFromAuth(authentication);
-		try {
-			stripeService.cancelSubscription(customerId);
-			return "Subscription canceled successfully.";
-		} catch (StripeException e) {
-			return "Failed to cancel subscription: " + e.getMessage();
+	public String cancelSubscription(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+			RedirectAttributes redirectAttributes) {
+		User user = userDetailsImpl.getUser();
+		String subscriptionId = user.getSubscriptionId();
+		String email = user.getEmail();
+		if (subscriptionId != null && !subscriptionId.isEmpty()) {
+			try {
+				// サブスクリプションのキャンセル
+				stripeService.cancelSubscription(subscriptionId, email);
+				redirectAttributes.addFlashAttribute("successMessage",
+						"サブスクリプションがキャンセルされました。画面を更新するには一度ログアウトし、再度ログインをお願いします。");
+			} catch (Exception e) {
+				e.printStackTrace();
+				redirectAttributes.addFlashAttribute("errorMessage", "サブスクリプションのキャンセルに失敗しました。");
+			}
+		} else {
+			redirectAttributes.addFlashAttribute("errorMessage", "サブスクリプションIDが見つかりません。");
 		}
-	}
 
-	private String getCustomerIdFromAuth(Authentication authentication) {
-		// ここで認証情報からcustomerIdを取得するロジックを配置
-		// 例: UserDetailsのカスタム実装から取得
-		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-		return userDetails.getCustomerId(); // 仮のメソッド、実装に応じて変更する必要あり
+		return "redirect:/user";
+
 	}
 }

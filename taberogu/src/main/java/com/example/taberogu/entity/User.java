@@ -55,7 +55,30 @@ public class User {
 	@Column(name = "updated_at", insertable = false, updatable = false)
 	private Timestamp updatedAt;
 
+	@Column(name = "customer_id", nullable = true)
+	private String customerId;
+
+	@Column(name = "subscription_id", nullable = true)
+	private String subscriptionId;
+
+	public String getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+
+	public String getSubscriptionId() {
+		return subscriptionId;
+	}
+
+	public void setSubscriptionId(String subscriptionId) {
+		this.subscriptionId = subscriptionId;
+	}
+
 	public int getId() {
 		return this.id;
 	}
+
 }

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<div th:replace="~{fragment :: meta}"></div>
+
+	<div th:replace="~{fragment :: styles}"></div>
+
+	<title>有料会員登録キャンセル</title>
+	<title>Checkout canceled</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<div class="samuraitabelog-wrapper">
+		<div th:replace="~{fragment :: header}"></div>
+
+		<div th:if="${errorsMessage}" class="alert alert-info">
+			<span th:text="${errorMessage}"></span>
+			<section>
+				<p>サブスクリプションに失敗したので戻りましょう</p>
+			</section>
+			<div th:replace="~{fragment :: footer}"></div>
+		</div>
+		<div th:replace="~{fragment :: scripts}"></div>
+</body>
+
+</html>

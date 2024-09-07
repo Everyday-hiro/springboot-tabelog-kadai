@@ -1,11 +1,11 @@
-<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html>
 
 <head>
 	<div th:replace="~{fragment :: meta}"></div>
 
 	<div th:replace="~{fragment :: styles}"></div>
 
-	<title>有料会員退会</title>
+	<title>有料会員登録</title>
 </head>
 
 <body>
@@ -13,7 +13,7 @@
 		<div th:replace="~{fragment :: header}"></div>
 		<main>
 			<section>
-				<div class="product　text-center">
+				<div class="product">
 					<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="14px"
 						height="16px" viewBox="0 0 14 16" version="1.1">
 						<defs />
@@ -25,10 +25,15 @@
 							</g>
 						</g>
 					</svg>
+					<div class="description text-center">
+						<h3>有料会員</h3>
+						<h5>７５０円/月</h5>
+					</div>
 				</div>
-				<form action="/cancel-subscription" method="POST">
-					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-					<button id="cancelButton" type="submit">有料会員を退会する場合はこちら</button>
+				<form action="/create-checkout-session" method="POST">
+					<!-- Add a hidden field with the lookup_key of your Price -->
+					<input type="hidden" name="lookup_key" value="tabelog_subsc" />
+					<button id="paymentButton" type="submit">有料会員登録はこちら</button>
 				</form>
 			</section>
 		</main>
