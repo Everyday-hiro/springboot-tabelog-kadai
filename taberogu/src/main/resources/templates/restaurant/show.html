@@ -150,6 +150,7 @@
 									<!-- レビュー -->
 									<h3 class="mb-3">レビュー</h3>
 									<div>
+										<p sec:authorize="hasRole('ROLE_FREE')">レビューを投稿するには<a th:href="@{/subsc}">有料会員登録</a>が必要です。</p>
 										<a class="btn text-white shadow-sm samuraitabelog-btn text-right"
 											th:href="@{/review/register/__${restaurant.getId()}__}"
 											sec:authorize="hasRole('ROLE_PAID')"
@@ -231,11 +232,18 @@
 								<div class="col-4 col-lg-4 px-0 ps-lg-4 mb-4">
 									<div class="card" sec:authorize="isAnonymous()">
 										<div class="card-body">
-											<p class="card-text">予約するには<a th:href="@{/login}">ログイン</a>が必要です。</p>
+											<p class="card-text">予約するには<a th:href="@{/login}">ログイン</a>と有料会員登録が必要です。</p>
 											<button type="submit" class="btn btn-primary w-100" disabled>予約する</button>
 										</div>
 									</div>
 
+									<div class="card" sec:authorize="hasRole('ROLE_FREE')">
+										<div class="card-body">
+											<p class="card-text">予約するには<a th:href="@{/subsc}">有料会員登録</a>が必要です。</p>
+											<button type="submit" class="btn btn-primary w-100" disabled>予約する</button>
+										</div>
+									</div>
+									
 									<div sec:authorize="hasRole('ROLE_PAID')" class="col-lg-4 px-0 mb-4">
 										<div class="card">
 											<div class="card-body">
