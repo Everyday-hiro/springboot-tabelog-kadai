@@ -4,8 +4,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.example.taberogu.entity.Role;
@@ -13,9 +11,9 @@ import com.example.taberogu.entity.User;
 import com.example.taberogu.form.ReservationRegisterForm;
 import com.example.taberogu.repository.RoleRepository;
 import com.example.taberogu.repository.UserRepository;
-import com.example.taberogu.security.UserDetailsImpl;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
+import com.stripe.model.Customer;
 import com.stripe.model.Event;
 import com.stripe.model.StripeObject;
 import com.stripe.model.Subscription;
@@ -25,7 +23,6 @@ import com.stripe.param.checkout.SessionCreateParams;
 import com.stripe.param.checkout.SessionRetrieveParams;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.transaction.Transactional;
 
 @Service
 public class StripeService {
@@ -89,6 +86,8 @@ public class StripeService {
 		Optional<StripeObject> optionalStripeObject = event.getDataObjectDeserializer().getObject();
 		optionalStripeObject.ifPresentOrElse(stripeObject -> {
 			Session session = (Session) stripeObject;
+			if (session.getMode().equals("subscription"))
+				return;
 			SessionRetrieveParams params = SessionRetrieveParams.builder().addExpand("payment_intent").build();
 
 			try {
@@ -128,15 +127,6 @@ public class StripeService {
 
 		try {
 			Session session = Session.create(params);
-
-			if (session != null && session.getId() != null) {
-
-				Role paidMemberRole = roleRepository.findById(2)
-						.orElseThrow(() -> new RuntimeException("Role not found"));
-				user.setRole(paidMemberRole);
-				// ユーザーの情報を更新
-				userRepository.save(user);
-			}
 			return session.getId();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -144,22 +134,38 @@ public class StripeService {
 		}
 	}
 
-	@Transactional
-	public void processSubscriptionCreated(String subscriptionId) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication != null) {
-			System.out.println("Authentication: " + authentication.getClass().getName());
-			System.out.println("Principal: " + authentication.getPrincipal());
-		} else {
-			System.err.println("Authentication is null.");
-		}
-		UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
-		User user = userDetailsImpl.getUser();
+	public void processSubscriptionCreated(String subscriptionId, String customerId) throws StripeException {
+		Customer customer = Customer.retrieve(customerId);
+		String email = customer.getEmail();
+		User user = userRepository.findByEmail(email);
 		user.setSubscriptionId(subscriptionId);
 		userRepository.save(user);
 	}
 
-	public void cancelSubscription(String subscriptionId) throws StripeException {
+	public void processSubscriptionPaymentSucceeded(String subscriptionId, String customerId) throws StripeException {
+		Customer customer = Customer.retrieve(customerId);
+		String email = customer.getEmail();
+		User user = userRepository.findByEmail(email);
+
+		if (user != null) {
+			try {
+				// ロールを有料会員に変更
+				Role paidMemberRole = roleRepository.findById(2)
+						.orElseThrow(() -> new RuntimeException("Role not found"));
+				user.setRole(paidMemberRole);
+
+				// ユーザー情報を更新
+				userRepository.save(user);
+				System.out.println("ユーザーのロールが有料会員に更新されました。");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("顧客IDに対応するユーザーが見つかりませんでした。");
+		}
+	}
+
+	public void cancelSubscription(String subscriptionId, String email) throws StripeException {
 		Stripe.apiKey = stripeApiKey;
 
 		SubscriptionCancelParams params = SubscriptionCancelParams.builder()
@@ -168,6 +174,16 @@ public class StripeService {
 
 		Subscription subscription = Subscription.retrieve(subscriptionId);
 		subscription.cancel(params);
+
+		User user = userRepository.findByEmail(email);
+		if (user != null) {
+			// ロールIDを変更（ここでは仮に「1」が無料ユーザーのロールIDとします）
+			Role freeMemberRole = roleRepository.findById(1)
+					.orElseThrow(() -> new RuntimeException("Role not found"));
+			user.setRole(freeMemberRole);
+			user.setSubscriptionId(null); // サブスクリプションIDをクリアする
+			userRepository.save(user);
+		}
 	}
 
 	public void processReservationPayment(Event event) {

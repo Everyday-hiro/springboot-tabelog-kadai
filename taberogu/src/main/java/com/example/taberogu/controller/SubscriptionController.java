@@ -8,13 +8,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.taberogu.entity.Role;
 import com.example.taberogu.entity.User;
 import com.example.taberogu.repository.RoleRepository;
 import com.example.taberogu.repository.UserRepository;
 import com.example.taberogu.security.UserDetailsImpl;
 import com.example.taberogu.service.StripeService;
-import com.stripe.exception.StripeException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -48,7 +46,7 @@ public class SubscriptionController {
 	@GetMapping("/user/success")
 	public String success(@RequestParam("session_id") String sessionId, RedirectAttributes redirectAttributes) {
 		// 成功した場合の処理
-		redirectAttributes.addFlashAttribute("successMessage", "サブスクリプション支払いが成功しました。");
+		redirectAttributes.addFlashAttribute("successMessage", "サブスクリプション支払いが成功しました。画面を更新するには一度ログアウトし、再度ログインをお願いします。");
 		return "redirect:/user"; // 成功メッセージページにリダイレクト
 	}
 
@@ -65,31 +63,26 @@ public class SubscriptionController {
 	}
 
 	@PostMapping("/cancel-subscription")
-	public String cancelSubscription(@AuthenticationPrincipal User user, RedirectAttributes redirectAttributes) {
-		try {
-			// 現在のユーザーからサブスクリプションIDを取得
-			String subscriptionId = user.getSubscriptionId();
-
-			if (subscriptionId != null) {
-				// Stripeでサブスクリプションをキャンセル
-				stripeService.cancelSubscription(subscriptionId);
-
-				// ユーザーのサブスクリプションIDをクリア
-				user.setSubscriptionId(null);
-				Role freeRole = roleRepository.findById(1)
-						.orElseThrow(() -> new RuntimeException("Role not found"));
-				user.setRole(freeRole);
-				userRepository.save(user);
-
-				redirectAttributes.addFlashAttribute("message", "サブスクリプションがキャンセルされました。");
-			} else {
-				redirectAttributes.addFlashAttribute("error", "サブスクリプションIDが見つかりません。");
+	public String cancelSubscription(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+			RedirectAttributes redirectAttributes) {
+		User user = userDetailsImpl.getUser();
+		String subscriptionId = user.getSubscriptionId();
+		String email = user.getEmail();
+		if (subscriptionId != null && !subscriptionId.isEmpty()) {
+			try {
+				// サブスクリプションのキャンセル
+				stripeService.cancelSubscription(subscriptionId, email);
+				redirectAttributes.addFlashAttribute("successMessage",
+						"サブスクリプションがキャンセルされました。画面を更新するには一度ログアウトし、再度ログインをお願いします。");
+			} catch (Exception e) {
+				e.printStackTrace();
+				redirectAttributes.addFlashAttribute("errorMessage", "サブスクリプションのキャンセルに失敗しました。");
 			}
-		} catch (StripeException e) {
-			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("error", "サブスクリプションのキャンセル中にエラーが発生しました。");
+		} else {
+			redirectAttributes.addFlashAttribute("errorMessage", "サブスクリプションIDが見つかりません。");
 		}
 
-		return "redirect:/user/profile"; // キャンセル後のリダイレクト先
+		return "redirect:/user";
+
 	}
 }

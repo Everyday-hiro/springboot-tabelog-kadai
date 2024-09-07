@@ -17,7 +17,9 @@ import com.example.taberogu.security.UserDetailsImpl;
 import com.example.taberogu.service.StripeService;
 import com.stripe.Stripe;
 import com.stripe.exception.SignatureVerificationException;
+import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
+import com.stripe.model.Invoice;
 import com.stripe.model.Subscription;
 import com.stripe.net.Webhook;
 
@@ -41,7 +43,8 @@ public class StripeWebhookController {
 
 	@PostMapping("/stripe/webhook")
 	public ResponseEntity<String> webhook(@RequestBody String payload,
-			@RequestHeader("Stripe-Signature") String sigHeader, Integer userId) {
+			@RequestHeader("Stripe-Signature") String sigHeader,
+			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
 		Stripe.apiKey = stripeApiKey;
 		Event event = null;
 
@@ -58,9 +61,31 @@ public class StripeWebhookController {
 		if ("customer.subscription.created".equals(event.getType())) {
 			Subscription subscription = (Subscription) event.getData().getObject();
 			String subscriptionId = subscription.getId();
+			String customerId = subscription.getCustomer();
 
-			// サブスクリプションIDのみを処理する
-			stripeService.processSubscriptionCreated(subscriptionId);
+			// サブスクリプションIDとカスタマーIDを処理する
+			try {
+				stripeService.processSubscriptionCreated(subscriptionId, customerId);
+			} catch (StripeException e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+			}
+		}
+
+		// 支払い成功イベントの追加
+		if ("invoice.payment_succeeded".equals(event.getType())) {
+			Invoice invoice = (Invoice) event.getDataObjectDeserializer().getObject().orElse(null);
+			if (invoice != null) {
+				String subscriptionId = invoice.getSubscription();
+				String customerId = invoice.getCustomer();
+
+				// 支払い成功後の処理
+				try {
+					stripeService.processSubscriptionPaymentSucceeded(subscriptionId, customerId);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 		}
 
 		return new ResponseEntity<>("Success", HttpStatus.OK);
@@ -74,16 +99,13 @@ public class StripeWebhookController {
 			RedirectAttributes redirectAttributes) {
 		// 現在のユーザー情報を取得
 		User user = userDetailsImpl.getUser();
-
-		// サブスクリプションの作成とセッションIDの取得
-		String sessionId = stripeService.createSubscription(user, httpServletRequest);
-
-		if (sessionId != null && !sessionId.isEmpty()) {
+		if (user != null) {
+			// サブスクリプションの作成とセッションIDの取得
+			String sessionId = stripeService.createSubscription(user, httpServletRequest);
 			// セッションIDをリダイレクト先に渡す
 			redirectAttributes.addAttribute("session_id", sessionId);
 			return "redirect:/user/success";
 		} else {
-			// 失敗した場合の処理
 			redirectAttributes.addFlashAttribute("errorMessage", "サブスクリプションの作成に失敗しました。");
 			return "redirect:/user/cancel";
 		}
