@@ -46,8 +46,8 @@ public class RestaurantController {
 	@GetMapping
 	public String index(
 			@RequestParam(name = "keyword", required = false) String keyword,
-			@RequestParam(name = "category", required = false) Category category,
 			@RequestParam(name = "area", required = false) String area,
+			@RequestParam(name = "price", required = false) Integer price,
 			@RequestParam(name = "order", required = false) String order,
 			@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable,
 			Model model) {
@@ -67,12 +67,11 @@ public class RestaurantController {
 			} else {
 				restaurantPage = restaurantRepository.findByAddressLikeOrderByCreatedAtDesc("%" + area + "%", pageable);
 			}
-		} else if (category != null) {
+		} else if (price != null) {
 			if (order != null && order.equals("priceAsc")) {
-				restaurantPage = restaurantRepository.findByCategoryLikeOrderByPriceAsc("%" + category + "%", pageable);
+				restaurantPage = restaurantRepository.findByPriceLessThanEqualOrderByPriceAsc(price, pageable);
 			} else {
-				restaurantPage = restaurantRepository.findByCategoryLikeOrderByCreatedAtDesc("%" + category + "%",
-						pageable);
+				restaurantPage = restaurantRepository.findByPriceLessThanEqualOrderByCreatedAtDesc(price, pageable);
 			}
 		} else {
 			if (order != null && order.equals("priceAsc")) {
@@ -84,8 +83,8 @@ public class RestaurantController {
 
 		model.addAttribute("restaurantPage", restaurantPage);
 		model.addAttribute("keyword", keyword);
-		model.addAttribute("category", category);
 		model.addAttribute("area", area);
+		model.addAttribute("price", price);
 		model.addAttribute("order", order);
 
 		return "restaurant/index";

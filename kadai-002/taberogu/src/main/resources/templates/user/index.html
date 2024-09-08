@@ -30,13 +30,6 @@
 							<div>
 								<a th:href="@{/user/edit}">編集</a>
 							</div>
-							
-							<div th:if="${notCredit}">
-								<a th:href="@{/credit}">クレジットカード登録</a>
-							</div>
-							<div th:unless="${notCredit}">
-								<a th:href="@{/credit/info/__${credit.getId()}__}">クレジットカード情報</a>
-							</div>
 						</div>
 
 						<div th:if="${successMessage}" class="alert alert-info">
@@ -103,7 +96,6 @@
 									<span th:text="${user.getEmail()}"></span>
 								</div>
 							</div>
-							
 						</div>
 					</div>
 				</div>

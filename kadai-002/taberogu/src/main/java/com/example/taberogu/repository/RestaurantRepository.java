@@ -22,10 +22,6 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
 
 	public Page<Restaurant> findByAddressLikeOrderByCreatedAtDesc(String area, Pageable pageable);
 
-	public Page<Restaurant> findByCategoryLikeOrderByPriceAsc(String category, Pageable pageable);
-
-	public Page<Restaurant> findByCategoryLikeOrderByCreatedAtDesc(String category, Pageable pageable);
-
 	public Page<Restaurant> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
 	public Page<Restaurant> findAllByOrderByPriceAsc(Pageable pageable);
@@ -35,5 +31,9 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
 	public Page<Restaurant> findByCategoryIdAndNameLike(Integer id, String string, Pageable pageable);
 
 	public Page<Restaurant> findByCategoryId(Integer id, Pageable pageable);
+
+	public Page<Restaurant> findByPriceLessThanEqualOrderByPriceAsc(Integer string, Pageable pageable);
+
+	public Page<Restaurant> findByPriceLessThanEqualOrderByCreatedAtDesc(Integer string, Pageable pageable);
 
 }

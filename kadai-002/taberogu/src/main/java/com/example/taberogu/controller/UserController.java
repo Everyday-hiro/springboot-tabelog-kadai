@@ -1,7 +1,5 @@
 package com.example.taberogu.controller;
 
-import java.util.Optional;
-
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,13 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.taberogu.entity.Credit;
 import com.example.taberogu.entity.User;
 import com.example.taberogu.form.UserEditForm;
-import com.example.taberogu.repository.CreditRepository;
 import com.example.taberogu.repository.UserRepository;
 import com.example.taberogu.security.UserDetailsImpl;
-import com.example.taberogu.service.StripeService;
 import com.example.taberogu.service.UserService;
 
 @Controller
@@ -28,29 +23,16 @@ import com.example.taberogu.service.UserService;
 public class UserController {
 	private final UserRepository userRepository;
 	private final UserService userService;
-	private final CreditRepository creditRepository;
-	private final StripeService stripeService;
 
-	public UserController(UserRepository userRepository, UserService userService, CreditRepository creditRepository,
-			StripeService stripeService) {
+	public UserController(UserRepository userRepository, UserService userService) {
 		this.userRepository = userRepository;
 		this.userService = userService;
-		this.creditRepository = creditRepository;
-		this.stripeService = stripeService;
 	}
 
 	@GetMapping
 	public String index(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, Model model) {
 		User user = userRepository.getReferenceById(userDetailsImpl.getUser().getId());
 		model.addAttribute("user", user);
-		Optional<Credit> creditOptional = creditRepository.findByUserId(user.getId());
-		if (creditOptional.isPresent()) {
-			model.addAttribute("credit", creditOptional.get());
-			model.addAttribute("notCredit", false);
-		} else {
-			model.addAttribute("credit", null);
-			model.addAttribute("notCredit", true);
-		}
 		return "user/index";
 	}
 
@@ -81,5 +63,4 @@ public class UserController {
 		redirectAttributes.addFlashAttribute("successMessage", "会員情報を編集しました。");
 		return "redirect:/user";
 	}
-
 }

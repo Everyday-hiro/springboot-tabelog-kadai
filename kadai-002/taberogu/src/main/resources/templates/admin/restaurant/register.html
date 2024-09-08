@@ -58,19 +58,24 @@
 									<label for="category" class="col-form-label text-md-left fw-bold">カテゴリ</label>
 								</div>
 								<div class="col-md-8">
+									<select id="category" name="category" class="form-control">
+										<option value="" hidden>選択してください</option>
+										<option th:each="category : ${category}" th:value="${category.id}" th:text="${category.name}"
+											th:selected="${category.id == selectedCategoryId}"></option>
+									</select>
 									<div th:if="${#fields.hasErrors('category')}" class="text-danger small mb-2"
 										th:errors="*{category}"></div>
-									<input type="text" class="form-control" th:field="*{category}">
 								</div>
 							</div>
 
 							<div class="form-group row mb-3">
 								<div class="col-md-4">
-									<label for="restaurantDescription" class="col-form-label text-md-left fw-bold">説明</label>
+									<label for="restaurantDescription"
+										class="col-form-label text-md-left fw-bold">説明</label>
 								</div>
 								<div class="col-md-8">
-									<div th:if="${#fields.hasErrors('restaurantDescription')}" class="text-danger small mb-2"
-										th:errors="*{restaurantDescription}"></div>
+									<div th:if="${#fields.hasErrors('restaurantDescription')}"
+										class="text-danger small mb-2" th:errors="*{restaurantDescription}"></div>
 									<textarea class="form-control" th:field="*{restaurantDescription}" cols="30"
 										rows="5"></textarea>
 								</div>

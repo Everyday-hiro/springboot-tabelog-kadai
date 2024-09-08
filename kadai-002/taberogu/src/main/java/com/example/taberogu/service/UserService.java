@@ -98,4 +98,18 @@ public class UserService {
 		userRepository.save(user);
 	}
 
+	// ユーザーをメールアドレスで検索
+	public User findByEmail(String email) {
+		return userRepository.findByEmail(email);
+	}
+
+	// パスワードを更新するメソッド
+	@Transactional
+	public void updatePassword(User user, String newPassword) {
+		// パスワードをハッシュ化して保存
+		String encodedPassword = passwordEncoder.encode(newPassword);
+		user.setPassword(encodedPassword);
+		userRepository.save(user);
+	}
+
 }

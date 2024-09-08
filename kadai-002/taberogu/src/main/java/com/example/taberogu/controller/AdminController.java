@@ -1,5 +1,7 @@
 package com.example.taberogu.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -16,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.taberogu.entity.Category;
 import com.example.taberogu.entity.Restaurant;
 import com.example.taberogu.form.RestaurantEditForm;
 import com.example.taberogu.form.RestaurantRegisterForm;
+import com.example.taberogu.repository.CategoryRepository;
 import com.example.taberogu.repository.RestaurantRepository;
 import com.example.taberogu.service.RestaurantService;
 
@@ -27,10 +31,13 @@ import com.example.taberogu.service.RestaurantService;
 public class AdminController {
 	private final RestaurantRepository restaurantRepository;
 	private final RestaurantService restaurantService;
+	private final CategoryRepository categoryRepository;
 
-	public AdminController(RestaurantRepository restaurantRepository, RestaurantService restaurantService) {
+	public AdminController(RestaurantRepository restaurantRepository, RestaurantService restaurantService,
+			CategoryRepository categoryRepository) {
 		this.restaurantRepository = restaurantRepository;
 		this.restaurantService = restaurantService;
+		this.categoryRepository = categoryRepository;
 	}
 
 	@GetMapping
@@ -64,14 +71,18 @@ public class AdminController {
 
 	@GetMapping("/restaurant/register")
 	public String register(Model model) {
+		List<Category> category = categoryRepository.findAll(); // カテゴリのリストを取得
+		model.addAttribute("category", category);
 		model.addAttribute("restaurantRegisterForm", new RestaurantRegisterForm());
 		return "admin/restaurant/register";
 	}
 
 	@PostMapping("/restaurant/create")
 	public String create(@ModelAttribute @Validated RestaurantRegisterForm restaurantRegisterForm,
-			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+			BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
 		if (bindingResult.hasErrors()) {
+			List<Category> category = categoryRepository.findAll(); // エラーがある場合、カテゴリリストを再度取得
+			model.addAttribute("category", category);
 			return "admin/restaurant/register";
 		}
 		restaurantService.create(restaurantRegisterForm);

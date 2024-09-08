@@ -16,7 +16,7 @@ public class RestaurantRegisterForm {
 
 	private MultipartFile imageFile;
 
-	@NotBlank(message = "カテゴリを入力してください。")
+	@NotNull(message = "カテゴリを入力してください。")
 	private Category category;
 
 	@NotBlank(message = "説明を入力してください。")

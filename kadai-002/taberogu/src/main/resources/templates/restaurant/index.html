@@ -39,19 +39,18 @@
 
 						<div class="card mb-3">
 							<div class="card-header">
-								カテゴリから探す
+								金額から探す
 							</div>
 							<div class="card-body">
 								<form method="get" th:action="@{/restaurant}" class="w-100">
 									<div class="form-group mb-3">
-										<select class="form-control form-select" name="category">
+										<select class="form-control form-select" name="price">
 											<option value="" hidden>選択してください</option>
-											<option value="カフェ" th:selected="${category == 'カフェ'}">カフェ</option>
-											<option value="焼肉" th:selected="${category == '焼肉'}">焼肉</option>
-											<option value="寿司" th:selected="${category == '寿司'}">寿司</option>
-											<option value="中華" th:selected="${category == '中華'}">中華</option>
-											<option value="丼物" th:selected="${category == '丼物'}">丼物</option>
-											<option value="和食" th:selected="${category == '和食'}">和食</option>
+											<option value="2000" th:selected="${price == 2000}">2,000円以内</option>
+											<option value="3000" th:selected="${price == 3000}">3,000円以内</option>
+											<option value="4000" th:selected="${price == 4000}">4,000円以内</option>
+											<option value="5000" th:selected="${price == 5000}">5,000円以内</option>
+											<option value="6000" th:selected="${price == 6000}">6,000円以内</option>
 										</select>
 									</div>
 									<div class="form-group">
@@ -161,8 +160,8 @@
 
 							<form method="get" th:action="@{/restaurant}" class="mb-3 samuraitabelog-sort-box">
 								<input th:if="${keyword}" type="hidden" name="keyword" th:value="${keyword}">
-								<input th:if="${category}" type="hidden" name="area" th:value="${category}">
-								<input th:if="${area}" type="hidden" name="price" th:value="${area}">
+								<input th:if="${area}" type="hidden" name="area" th:value="${area}">
+								<input th:if="${price}" type="hidden" name="price" th:value="${price}">
 								<select class="form-select form-select-sm" name="order" onChange="this.form.submit();">
 									<option value="createdAtDesc"
 										th:selected="${order == 'createdAtDesc' || order == null}">新着順</option>
