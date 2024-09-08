@@ -1,5 +1,7 @@
 package com.example.taberogu.service;
 
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,11 +19,14 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final RoleRepository roleRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final JavaMailSender mailSender;
 
-	public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+	public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder,
+			JavaMailSender mailSender) {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.mailSender = mailSender;
 	}
 
 	@Transactional
@@ -103,13 +108,36 @@ public class UserService {
 		return userRepository.findByEmail(email);
 	}
 
+	public void sendPasswordResetEmail(String email, String resetUrl) {
+		// メール送信ロジック
+		String subject = "パスワード再設定";
+		String body = "以下のリンクをクリックしてパスワードを再設定してください: " + resetUrl;
+		// 実際のメール送信処理
+		// メールメッセージの作成
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setTo(email); // 送信先
+		message.setSubject(subject); // 件名
+		message.setText(body); // 本文
+
+		// メールの送信
+		mailSender.send(message);
+	}
+
 	// パスワードを更新するメソッド
 	@Transactional
 	public void updatePassword(User user, String newPassword) {
 		// パスワードをハッシュ化して保存
 		String encodedPassword = passwordEncoder.encode(newPassword);
+		System.out.println("Encoded password: " + encodedPassword);
 		user.setPassword(encodedPassword);
 		userRepository.save(user);
+		System.out.println("Password updated for user: " + user.getName()); // デバッグ用ログ
+	}
+
+	public boolean checkPassword(User user, String currentPassword) {
+		boolean matches = passwordEncoder.matches(currentPassword, user.getPassword());
+		System.out.println("Password match: " + matches); // デバッグ用ログ
+		return matches;
 	}
 
 }

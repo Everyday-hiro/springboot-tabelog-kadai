@@ -1,5 +1,7 @@
 package com.example.taberogu.service;
 
+import java.util.UUID;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,15 +35,24 @@ public class VerificationTokenService {
 		return verificationTokenRepository.findByToken(token);
 	}
 
-	@Transactional
-	public void createAndPublishEvent(User user, String token) {
-		// トークンの生成と保存
-		VerificationToken verificationToken = new VerificationToken();
+	public String createVerificationToken(User user) {
+		// トークンの生成
+		VerificationToken token = verificationTokenRepository.findByUser(user);
+		if (token == null) {
+			token = new VerificationToken();
+			token.setUser(user);
+		}
+		token.setToken(UUID.randomUUID().toString());
+		verificationTokenRepository.save(token);
 
-		verificationToken.setUser(user);
-		verificationToken.setToken(token);
+		return token.getToken();
+	}
 
-		verificationTokenRepository.save(verificationToken);
+	public VerificationToken findByToken(String token) {
+		return verificationTokenRepository.findByToken(token);
+	}
 
+	public void deleteToken(VerificationToken token) {
+		verificationTokenRepository.delete(token);
 	}
 }

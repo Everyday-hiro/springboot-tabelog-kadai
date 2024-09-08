@@ -29,6 +29,9 @@
 					<span th:text="${successMessage}"></span>
 				</div>
 
+				<div th:if="${errorMessage}" class="alert alert-info">
+					<span th:test="${errorMessage}"></span>
+				</div>
 				<div class="row">
 					<div class="col-md-2">
 						<nav class="my-3" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">

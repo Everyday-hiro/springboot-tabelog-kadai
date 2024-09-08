@@ -66,6 +66,9 @@
 									sec:authorize="hasRole('ROLE_FREE')">有料会員</a>
 								<a class="dropdown-item samuraitabelog-dropdown-item" th:href="@{/withdrawal}"
 									sec:authorize="hasRole('ROLE_PAID')">有料会員退会</a>
+								<a class="dropdown-item samuraitabelog-dropdown-item" th:href="@{/password/request}">
+									パスワードを再設定したい場合
+								</a>
 
 								<div class="dropdown-divider"></div>
 
