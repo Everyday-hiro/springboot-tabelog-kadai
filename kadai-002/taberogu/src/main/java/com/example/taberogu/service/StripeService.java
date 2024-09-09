@@ -82,6 +82,19 @@ public class StripeService {
 		}
 	}
 
+	public String createCheckoutSession() throws StripeException {
+		Stripe.apiKey = stripeApiKey;
+		SessionCreateParams params = SessionCreateParams.builder()
+				.addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
+				.setMode(SessionCreateParams.Mode.SETUP)
+				.setSuccessUrl("http://localhost:8080/user/success?session_id={CHECKOUT_SESSION_ID}")
+				.setCancelUrl("http://localhost:8080/user/cancel")
+				.build();
+
+		Session session = Session.create(params);
+		return session.getId();
+	}
+
 	public void processSessionCompleted(Event event) {
 		Optional<StripeObject> optionalStripeObject = event.getDataObjectDeserializer().getObject();
 		optionalStripeObject.ifPresentOrElse(stripeObject -> {

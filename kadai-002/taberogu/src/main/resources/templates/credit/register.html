@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<title>クレジットカード登録</title>
+	<script src="https://js.stripe.com/v3/"></script>
+</head>
+
+<body>
+	<div>
+		<button id="checkout-button">クレジットカード登録</button>
+	</div>
+
+	<script type="text/javascript">
+		var stripe = Stripe('pk_test_51PJQXjIzVhtPxktW2YcMOqMVWrLYWy7axjOaTWurSVstrY8ft9NJlNP5NJjOeH6fgne4ys1J2sEDBvbweYuXQ8O500kaopSPBe'); // あなたの公開可能キー
+
+		document.getElementById('checkout-button').addEventListener('click', function () {
+			fetch('/api/payment/create-checkout', {
+				method: 'GET'
+			})
+				.then(function (response) {
+					return response.json();
+				})
+				.then(function (session) {
+					return stripe.redirectToCheckout({sessionId: session.sessionId});
+				})
+				.then(function (result) {
+					if (result.error) {
+						alert(result.error.message);
+					}
+				})
+				.catch(function (error) {
+					console.error('Error:', error);
+				});
+		});
+	</script>
+</body>
+
+</html>
