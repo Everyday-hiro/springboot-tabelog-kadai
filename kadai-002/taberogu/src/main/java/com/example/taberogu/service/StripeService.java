@@ -121,7 +121,7 @@ public class StripeService {
 								.setPrice("price_1PrWUNIzVhtPxktW0z7zQ0n8") // あなたが作成した価格ID
 								.build())
 				.setMode(SessionCreateParams.Mode.SUBSCRIPTION)
-				.setSuccessUrl(requestUrl.replaceAll("/user/success?session_id={CHECKOUT_SESSION_ID}", ""))
+				.setSuccessUrl(requestUrl.replace("/user/success?session_id={CHECKOUT_SESSION_ID}", ""))
 				.setCancelUrl(requestUrl.replace("/user/cancel", ""))
 				.build();
 

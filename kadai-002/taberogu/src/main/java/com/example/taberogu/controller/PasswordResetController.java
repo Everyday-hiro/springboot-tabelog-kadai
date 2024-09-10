@@ -13,6 +13,8 @@ import com.example.taberogu.entity.VerificationToken;
 import com.example.taberogu.service.UserService;
 import com.example.taberogu.service.VerificationTokenService;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Controller
 @RequestMapping("/password")
 public class PasswordResetController {
@@ -31,12 +33,15 @@ public class PasswordResetController {
 
 	// パスワード再設定リクエスト
 	@PostMapping("/reset-request")
-	public String resetPasswordRequest(@RequestParam("email") String email, RedirectAttributes redirectAttributes) {
+	public String resetPasswordRequest(@RequestParam("email") String email, HttpServletRequest request,
+			RedirectAttributes redirectAttributes) {
 		// ユーザー取得やトークン生成をサービスに依頼
 		User user = userService.findByEmail(email);
 		if (user != null) {
 			String token = verificationTokenService.createVerificationToken(user); // リセット用トークンの生成
-			String resetUrl = "http://localhost:8080/password/reset?token=" + token;
+			String appUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+					+ request.getContextPath();
+			String resetUrl = appUrl + "/password/reset?token=" + token;
 			userService.sendPasswordResetEmail(user.getEmail(), resetUrl);
 			redirectAttributes.addFlashAttribute("successMessage",
 					"ご入力いただいたメールアドレスに認証メールを送信しました。メールに記載されているリンクをクリックし、パスワードの再設定を完了してください。");
