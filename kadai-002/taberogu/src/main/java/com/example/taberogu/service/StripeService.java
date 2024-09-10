@@ -110,7 +110,7 @@ public class StripeService {
 
 	public String createSubscription(User user, HttpServletRequest httpServletRequest) {
 		Stripe.apiKey = stripeApiKey;
-		String MY_DOMAIN = "http://localhost:8080";
+		String requestUrl = new String(httpServletRequest.getRequestURL());
 
 		// セッション作成
 		SessionCreateParams params = SessionCreateParams.builder()
@@ -121,8 +121,8 @@ public class StripeService {
 								.setPrice("price_1PrWUNIzVhtPxktW0z7zQ0n8") // あなたが作成した価格ID
 								.build())
 				.setMode(SessionCreateParams.Mode.SUBSCRIPTION)
-				.setSuccessUrl(MY_DOMAIN + "/user/success?session_id={CHECKOUT_SESSION_ID}")
-				.setCancelUrl(MY_DOMAIN + "/user/cancel")
+				.setSuccessUrl(requestUrl.replaceAll("/user/success?session_id={CHECKOUT_SESSION_ID}", ""))
+				.setCancelUrl(requestUrl.replace("/user/cancel", ""))
 				.build();
 
 		try {
