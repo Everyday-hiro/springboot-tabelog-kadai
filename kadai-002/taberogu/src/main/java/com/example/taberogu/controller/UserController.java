@@ -63,4 +63,18 @@ public class UserController {
 		redirectAttributes.addFlashAttribute("successMessage", "会員情報を編集しました。");
 		return "redirect:/user";
 	}
+
+	@GetMapping("/membercancel")
+	public String index() {
+		return "user/membercancel";
+	}
+
+	@PostMapping("/delete")
+	public String delete(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+			RedirectAttributes redirectAttributes) {
+		User user = userDetailsImpl.getUser();
+		userService.deleteUser(user);
+		redirectAttributes.addFlashAttribute("successMessage", "アカウントが削除されました。");
+		return "redirect:/";
+	}
 }

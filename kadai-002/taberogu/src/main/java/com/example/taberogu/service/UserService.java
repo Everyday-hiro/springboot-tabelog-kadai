@@ -13,18 +13,22 @@ import com.example.taberogu.form.SignupForm;
 import com.example.taberogu.form.UserEditForm;
 import com.example.taberogu.repository.RoleRepository;
 import com.example.taberogu.repository.UserRepository;
+import com.example.taberogu.repository.VerificationTokenRepository;
 
 @Service
 public class UserService {
 	private final UserRepository userRepository;
 	private final RoleRepository roleRepository;
+	private final VerificationTokenRepository verificationTokenRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JavaMailSender mailSender;
 
-	public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder,
+	public UserService(UserRepository userRepository, RoleRepository roleRepository,
+			VerificationTokenRepository verificationTokenRepository, PasswordEncoder passwordEncoder,
 			JavaMailSender mailSender) {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
+		this.verificationTokenRepository = verificationTokenRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.mailSender = mailSender;
 	}
@@ -138,6 +142,12 @@ public class UserService {
 		boolean matches = passwordEncoder.matches(currentPassword, user.getPassword());
 		System.out.println("Password match: " + matches); // デバッグ用ログ
 		return matches;
+	}
+
+	@Transactional
+	public void deleteUser(User user) {
+		verificationTokenRepository.deleteByUserId(user.getId());
+		userRepository.delete(user);
 	}
 
 }
