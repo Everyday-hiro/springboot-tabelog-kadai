@@ -43,4 +43,18 @@ public class Reservation {
 
 	@Column(name = "updated_at", insertable = false, updatable = false)
 	private Timestamp updatedAt;
+
+	@Column(name = "payment_id")
+	private String paymentId;
+
+	@Column(name = "session_id")
+	private String sessionId;
+
+	public String getPaymentId() {
+		return paymentId;
+	}
+
+	public String getSessionId() {
+		return sessionId;
+	}
 }

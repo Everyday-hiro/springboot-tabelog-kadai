@@ -24,6 +24,7 @@ import com.example.taberogu.repository.RestaurantRepository;
 import com.example.taberogu.security.UserDetailsImpl;
 import com.example.taberogu.service.ReservationService;
 import com.example.taberogu.service.StripeService;
+import com.stripe.exception.StripeException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -75,7 +76,8 @@ public class ReservationController {
 	public String confirm(@PathVariable(name = "id") Integer id,
 			@ModelAttribute ReservationInputForm reservationInputForm,
 			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
-			HttpServletRequest httpServletRequest,
+			HttpServletRequest httpServletRequest, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes,
 			Model model) {
 		Restaurant restaurant = restaurantRepository.getReferenceById(id);
 		User user = userDetailsImpl.getUser();
@@ -95,7 +97,35 @@ public class ReservationController {
 		model.addAttribute("restaurant", restaurant);
 		model.addAttribute("reservationRegisterForm", reservationRegisterForm);
 		model.addAttribute("sessionId", sessionId);
+		redirectAttributes.addFlashAttribute("successMessage", "予約が完了しました。");
 		return "reservation/confirm";
+	}
+
+	@GetMapping("/reservations/delete/{reservationId}")
+	public String deleteReservation(@PathVariable Integer reservationId, RedirectAttributes redirectAttributes) {
+		try {
+			// 予約を削除する
+			Reservation reservation = reservationService.findById(reservationId);
+			if (reservation != null) {
+				// StripeのCheckout Sessionをキャンセルする
+				if (reservation.getSessionId() != null && !reservation.getSessionId().isEmpty()) {
+					stripeService.expireCheckoutSession(reservation.getSessionId());
+				}
+				// 予約を削除
+				reservationService.delete(reservationId);
+				redirectAttributes.addFlashAttribute("successMessage", "予約がキャンセルされました。");
+			} else {
+				redirectAttributes.addFlashAttribute("errorMessage", "予約が見つかりませんでした。");
+			}
+		} catch (StripeException e) {
+			redirectAttributes.addFlashAttribute("errorMessage", "支払いのキャンセルに失敗しました。");
+			e.printStackTrace();
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("errorMessgae", "予約の削除に失敗しました。");
+			e.printStackTrace();
+		}
+
+		return "redirect:/reservation?reserved";
 	}
 
 	/*

@@ -37,17 +37,30 @@ public class ReservationService {
 		String checkinDate = String.valueOf(paymentIntentObject.get("checkinDate"));
 		Integer numberOfPeople = Integer.valueOf(paymentIntentObject.get("numberOfPeople"));
 		Integer amount = Integer.valueOf(paymentIntentObject.get("amount"));
+		String paymentId = paymentIntentObject.get("paymentId");
+		String sessionId = paymentIntentObject.get("sessionId");
 
 		reservation.setRestaurant(restaurant);
 		reservation.setUser(user);
 		reservation.setCheckinDate(checkinDate);
 		reservation.setNumberOfPeople(numberOfPeople);
 		reservation.setAmount(amount);
+		reservation.setPaymentId(paymentId);
+		reservation.setSessionId(sessionId);
 
 		reservationRepository.save(reservation);
 	}
 
 	public Integer calculateAmount(Integer price, Integer numberOfPeople) {
 		return price * numberOfPeople;
+	}
+
+	public Reservation findById(Integer reservationId) {
+		return reservationRepository.findById(reservationId)
+				.orElse(null);
+	}
+
+	public void delete(Integer reservationId) {
+		reservationRepository.deleteById(reservationId);
 	}
 }

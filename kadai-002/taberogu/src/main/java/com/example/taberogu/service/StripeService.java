@@ -62,7 +62,8 @@ public class StripeService {
 								.build())
 				.setMode(SessionCreateParams.Mode.PAYMENT)
 				.setSuccessUrl(
-						requestUrl.replaceAll("/restaurant/[0-9]+/reservation/confirm", "") + "/reservation?reserved")
+						requestUrl.replaceAll("/restaurant/[0-9]+/reservation/confirm", "")
+								+ "/reservation?reserved?sessionId={CHECKOUT_SESSION_ID}")
 				.setCancelUrl(requestUrl.replace("/reservation/confirm", ""))
 				.setPaymentIntentData(
 						SessionCreateParams.PaymentIntentData.builder()
@@ -80,6 +81,14 @@ public class StripeService {
 			e.printStackTrace();
 			return "";
 		}
+	}
+
+	public void expireCheckoutSession(String sessionId) throws StripeException {
+		Stripe.apiKey = stripeApiKey;
+
+		// Checkout Sessionの期限を切らす（キャンセルする）
+		Session session = Session.retrieve(sessionId);
+		session.expire();
 	}
 
 	public void processSessionCompleted(Event event) {
