@@ -84,6 +84,21 @@ footer {
 	background-color: crimson !important;
 }
 
+.link-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.link-list a {
+    margin-bottom: 10px;
+    text-decoration: none; 
+    color: #007bff; 
+}
+
+.link-list a:hover {
+    text-decoration: underline; 
+}
+
 @media screen and (min-width: 1400px) {
 	.samuraitabelog-container {
 		max-width: 1200px;
