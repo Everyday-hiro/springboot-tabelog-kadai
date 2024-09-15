@@ -30,9 +30,9 @@
 							<div>
 								<a th:href="@{/user/edit}">編集</a>
 							</div>
-							
+
 							<div sec:authorize="hasRole('ROLE_PAID')">
-								<a th:href="@{https://billing.stripe.com/p/login/test_7sI7w02cObms8MwbII}">クレジットカード編集</a>
+								<a th:href="@{/customer/portal(email=${user.email})}">クレジットカード編集</a>
 							</div>
 						</div>
 

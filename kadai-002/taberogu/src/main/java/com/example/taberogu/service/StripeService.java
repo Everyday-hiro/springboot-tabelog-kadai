@@ -130,7 +130,7 @@ public class StripeService {
 								.setPrice("price_1PrWUNIzVhtPxktW0z7zQ0n8") // あなたが作成した価格ID
 								.build())
 				.setMode(SessionCreateParams.Mode.SUBSCRIPTION)
-				.setSuccessUrl(requestUrl.replace("/user/success?session_id={CHECKOUT_SESSION_ID}", ""))
+				.setSuccessUrl(requestUrl + "/user/success?session_id={CHECKOUT_SESSION_ID}")
 				.setCancelUrl(requestUrl.replace("/user/cancel", ""))
 				.build();
 
@@ -147,6 +147,8 @@ public class StripeService {
 		Customer customer = Customer.retrieve(customerId);
 		String email = customer.getEmail();
 		User user = userRepository.findByEmail(email);
+
+		user.setCustomerId(customerId);
 		user.setSubscriptionId(subscriptionId);
 		userRepository.save(user);
 	}
@@ -190,9 +192,46 @@ public class StripeService {
 			Role freeMemberRole = roleRepository.findById(1)
 					.orElseThrow(() -> new RuntimeException("Role not found"));
 			user.setRole(freeMemberRole);
+
+			user.setCustomerId(null);
 			user.setSubscriptionId(null); // サブスクリプションIDをクリアする
 			userRepository.save(user);
 		}
+	}
+
+	public String createCustomerPortalSession(String email, HttpServletRequest httpServletRequest)
+			throws StripeException {
+		Stripe.apiKey = stripeApiKey;
+		// データベースから顧客情報を取得
+		User user = userRepository.findByEmail(email);
+
+		if (user == null || user.getCustomerId() == null) {
+			throw new IllegalArgumentException("顧客が存在しないか、CustomerIdが設定されていません。");
+		}
+
+		String scheme = httpServletRequest.getScheme();
+		String serverName = httpServletRequest.getServerName();
+		int serverPort = httpServletRequest.getServerPort();
+		String contextPath = httpServletRequest.getContextPath();
+
+		String baseUrl = (serverPort == 80 || serverPort == 443)
+				? String.format("%s://%s%s", scheme, serverName, contextPath)
+				: String.format("%s://%s:%d%s", scheme, serverName, serverPort, contextPath);
+
+		// リダイレクト先URLを設定
+		String returnUrl = baseUrl + "/user?email=" + user.getEmail();
+
+		// Stripeのカスタマーポータルセッションを作成
+		com.stripe.param.billingportal.SessionCreateParams params = com.stripe.param.billingportal.SessionCreateParams
+				.builder()
+				.setCustomer(user.getCustomerId()) // データベースから取得したCustomerIdを使用
+				.setReturnUrl(returnUrl) // ポータルを退出したときのリダイレクト先URL
+				.build();
+
+		com.stripe.model.billingportal.Session session = com.stripe.model.billingportal.Session.create(params);
+
+		// 生成されたポータルURLを返す
+		return session.getUrl();
 	}
 
 	public void processReservationPayment(Event event) {

@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.example.taberogu.entity.User;
 import com.example.taberogu.repository.RoleRepository;
 import com.example.taberogu.repository.UserRepository;
 import com.example.taberogu.security.UserDetailsImpl;
 import com.example.taberogu.service.StripeService;
+import com.stripe.exception.StripeException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -43,7 +45,7 @@ public class SubscriptionController {
 		return "user/subscription";
 	}
 
-	@GetMapping("/user/success")
+	@GetMapping("/subsc/user/success")
 	public String success(@RequestParam("session_id") String sessionId, RedirectAttributes redirectAttributes) {
 		// 成功した場合の処理
 		redirectAttributes.addFlashAttribute("successMessage", "サブスクリプション支払いが成功しました。画面を更新するには一度ログアウトし、再度ログインをお願いします。");
@@ -84,5 +86,15 @@ public class SubscriptionController {
 
 		return "redirect:/user";
 
+	}
+
+	@GetMapping("/customer/portal")
+	public RedirectView redirectToCustomerPortal(@RequestParam("email") String email,
+			HttpServletRequest httpServletRequest) throws StripeException {
+		// 顧客のメールアドレスを使ってポータルリンクを生成
+		String portalUrl = stripeService.createCustomerPortalSession(email, httpServletRequest);
+
+		// ポータルURLにリダイレクト
+		return new RedirectView(portalUrl);
 	}
 }

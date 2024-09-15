@@ -13,10 +13,11 @@
 	<form th:action="@{/password/reset/confirm}" method="post">
 		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 		<input type="hidden" name="token" th:value="${token}" />
-		<input type="password" name="currentPassword" placeholder="現在のパスワード" required>
-		<input type="password" name="newPassword" placeholder="新しいパスワード" required>
+		<input type="password" name="currentPassword" placeholder="現在のパスワード"	 minlength="8" maxlength="16" required>
+		<input type="password" name="newPassword" placeholder="新しいパスワード"	minlength="8" maxlength="16" required>
 		<button type="submit">パスワードを再設定する</button>
 	</form>
+	<script src="/path/to/passwordValidation.js"></script>
 </body>
 
 </html>
