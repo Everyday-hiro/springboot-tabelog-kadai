@@ -66,7 +66,7 @@ public class UserController {
 
 	@GetMapping("/membercancel")
 	public String index() {
-		return "user/membercancel";
+		return "user/memberCancel";
 	}
 
 	@PostMapping("/delete")
