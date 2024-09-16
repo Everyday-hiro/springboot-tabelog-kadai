@@ -10,14 +10,15 @@
 	<div th:if="${errorMessage}" class="alert alert-info">
 		<span th:text="${errorMessage}"></span>
 	</div>
-	<form th:action="@{/password/reset/confirm}" method="post">
+	<form id="reset-password-form" th:action="@{/password/reset/confirm}" method="post"	onsubmit="return validatePasswords()">
 		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 		<input type="hidden" name="token" th:value="${token}" />
 		<input type="password" name="newPassword" placeholder="新しいパスワード"	minlength="8" maxlength="16" required>
 		<input type="password" name="confirmPassword" placeholder="確認用パスワード" minlength="8" maxlength="16" required>
 		<button type="submit">パスワードを再設定する</button>
+		<div id="error-message" style="color: red;"></div> <!-- エラーメッセージ表示用 -->
 	</form>
-	<script src="/path/to/passwordValidation.js"></script>
+	<script src="/passwordValidation.js"></script>
 </body>
 
 </html>

@@ -9,9 +9,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class RestaurantEditForm {
 	@NotNull
 	private Integer id;
@@ -21,7 +23,7 @@ public class RestaurantEditForm {
 
 	private MultipartFile imageFile;
 
-	@NotBlank(message = "カテゴリを入力してください。")
+	@NotNull(message = "カテゴリを入力してください。")
 	private Category category;
 
 	@NotBlank(message = "説明を入力してください。")
