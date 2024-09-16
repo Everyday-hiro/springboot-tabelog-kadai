@@ -65,9 +65,15 @@ public class PasswordResetController {
 	// 新しいパスワードの適用
 	@PostMapping("/reset/confirm")
 	public String confirmPasswordReset(@RequestParam("token") String token,
-			@RequestParam("currentPassword") String currentPassword,
-			@RequestParam("newPassword") String newPassword, RedirectAttributes redirectAttributes) {
-		System.out.println("confirmPasswordReset called with token: " + token);
+			@RequestParam("newPassword") String newPassword,
+			@RequestParam("confirmPassword") String confirmPassword,
+			RedirectAttributes redirectAttributes) {
+
+		// 新しいパスワードと確認用パスワードが一致しているか確認
+		if (!newPassword.equals(confirmPassword)) {
+			redirectAttributes.addFlashAttribute("errorMessage", "パスワードが一致しません。もう一度確認してください。");
+			return "redirect:/password/reset?token=" + token; // トークン付きリダイレクト
+		}
 		VerificationToken verificationToken = verificationTokenService.findByToken(token);
 		if (verificationToken == null) {
 			redirectAttributes.addFlashAttribute("errorMessage", "パスワード再設定に失敗しました。");
@@ -75,13 +81,10 @@ public class PasswordResetController {
 		}
 
 		User user = verificationToken.getUser();
-		if (!userService.checkPassword(user, currentPassword)) {
-			redirectAttributes.addFlashAttribute("errorMessage", "現在のパスワードが正しくありません。");
-			return "redirect:/";
-		}
-
 		// パスワードの更新
 		userService.updatePassword(user, newPassword);
+		// トークンの削除（セキュリティ上推奨）
+		verificationTokenService.deleteToken(verificationToken);
 		redirectAttributes.addFlashAttribute("successMessage", "パスワードが正常に再設定されました。");
 		return "redirect:/"; // パスワード再設定成功後のリダイレクト先
 	}
