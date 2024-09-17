@@ -9,7 +9,8 @@ import com.example.taberogu.entity.User;
 public interface UserRepository extends JpaRepository<User, Integer> {
 	public User findByEmail(String email);
 
-	public Page<User> findByNameLikeOrFuriganaLike(String nameKeyword, String furiganaKeyword, Pageable pageable);
+	public Page<User> findByNameLikeOrFuriganaLikeOrEmailLike(String name, String furigana, String email,
+			Pageable pageable);
 
 	public User findBySubscriptionId(String subscriptionId);
 
