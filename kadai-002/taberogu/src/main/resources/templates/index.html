@@ -77,7 +77,7 @@
 									<div class="card h-100">
 										<img th:if="${newRestaurant.getImage()}"
 											th:src="@{/storage/__${newRestaurant.getImage()}__}"
-											class="card-img-top samuraitravel-vertical-card-image" alt="店舗画像">
+											class="card-img-top samuraitabelog-vertical-card-image" alt="店舗画像">
 										<img th:unless="${newRestaurant.getImage()}" th:src="@{/images/noImage.png}"
 											class="card-img-top samuraitravel-vertical-card-image" alt="NO IMAGE">
 										<div class="card-body">
